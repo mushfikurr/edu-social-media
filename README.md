@@ -1,2 +1,3 @@
-## Education-oriented social networking platform
-Made in Flask, for A-Level Computer Science coursework.
+# Lore
+## A social networking site made with education in mind.
+Made in Flask for the programming project in the CS A-Level.
