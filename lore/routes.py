@@ -30,7 +30,11 @@ def register():
         return redirect(url_for('home'))
     else:
         print('user failed to register')
-    return render_template('register.html', form=register_form, title='Register')
+    return render_template(
+        'register.html',
+        form=register_form,
+        title='Register'
+    )
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -44,4 +48,8 @@ def login():
         return redirect(url_for('home'))
     else:
         print('user failed to login')
-    return render_template('login.html', form=login_form, title='Login')
+    return render_template(
+        'login.html',
+        form=login_form,
+        title='Login'
+    )
