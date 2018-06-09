@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <!-- Username -->
+    {{ form.username.label }}
+    {{ form.username }}
+    <!-- Password -->
+    {{ form.password.label }}
+    {{ form.password }}
+    <!-- Submit -->
+    {{ form.submit(value=form.submit.label.text) }}
+</form>
+{% endblock %}

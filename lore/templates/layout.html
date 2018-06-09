@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% if title %}
+            <title>Lore | {{ title }}</title>
+        {% else %}
+            <title>Lore</title>
+        {% endif %}
+        <title>Lore | </title>
+    </head>
+    <body>
+        <h1>Lore</h1>
+        {% block content %}{% endblock %}
+    </body>
+</html>

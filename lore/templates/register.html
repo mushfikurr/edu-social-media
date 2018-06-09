@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <!-- Username -->
+    {{ form.username.label }}
+    {{ form.username }}
+    <!-- Email -->
+    {{ form.email.label }}
+    {{ form.email }}
+    <!-- First Name -->
+    {{ form.first_name.label }}
+    {{ form.first_name }}
+    <!-- Last Name -->
+    {{ form.last_name.label }}
+    {{ form.last_name }}
+    <!-- Password -->
+    {{ form.password.label }}
+    {{ form.password }}
+    <!-- Confirm Password -->
+    {{ form.confirm_password.label }}
+    {{ form.confirm_password }}
+    <!-- Submit -->
+    {{ form.submit(value=form.submit.label.text) }}
+</form>
+{% endblock %}
