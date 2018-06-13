@@ -1,6 +1,9 @@
 from flask import render_template, redirect, url_for
-from lore import app, forms
+from lore import app, db
+from lore.forms import RegisterForm, LoginForm
+from lore.models import User
 
+#TODO: Integrate database (register a user, check if user in db, etc.)
 
 @app.route('/')
 @app.route('/home')
@@ -19,14 +22,30 @@ def about():
     return render_template('about.html', title='About')
 
 
+def on_register(form_data):
+    """
+    Fired when user passes all validation.
+    """
+    new_user = User(
+        username=form_data['username'], 
+        email=form_data['email'],
+        first_name=form_data['first_name'],
+        last_name=form_data['last_name'],
+        password=form_data['password']
+    )
+    db.session.add(new_user)
+    db.session.commit()
+    print(f"{new_user} to database")
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """
     Endpoint for registering.
     """
-    register_form = forms.RegisterForm()
+    register_form = RegisterForm()
     if register_form.validate_on_submit():
-        print('user has registered')
+        on_register(register_form.data)
         return redirect(url_for('home'))
     else:
         print('user failed to register')
@@ -37,14 +56,27 @@ def register():
     )
 
 
+def on_login(form_data):
+    """
+    Fired when user logs in after passing validation.
+    """
+    username_input = form_data['username']
+    password_input = form_data['password']
+    user_query = User.query.filter_by(username=username_input).first()
+    if user_query and user_query.password == password_input:
+        print("user logged in successfully")
+    else:
+        print("error logging in")
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """
     Endpoint for logging in.
     """
-    login_form = forms.LoginForm()
+    login_form = LoginForm()
     if login_form.validate_on_submit():
-        print('user has logged in')
+        on_login(login_form.data)
         return redirect(url_for('home'))
     else:
         print('user failed to login')
