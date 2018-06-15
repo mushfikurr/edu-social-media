@@ -5,9 +5,15 @@
     <!-- Username -->
     {{ form.username.label }}
     {{ form.username }}
+    {% for error in form.username.errors %}
+        {{ error }}
+    {% endfor %}
     <!-- Password -->
     {{ form.password.label }}
     {{ form.password }}
+    {% for error in form.password.errors %}
+        {{ error }}
+    {% endfor %}
     <!-- Submit -->
     {{ form.submit(value=form.submit.label.text) }}
 </form>

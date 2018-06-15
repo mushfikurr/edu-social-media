@@ -5,21 +5,39 @@
     <!-- Username -->
     {{ form.username.label }}
     {{ form.username }}
+    {% for error in form.username.errors %}
+        {{ error }}
+    {% endfor %}
     <!-- Email -->
     {{ form.email.label }}
     {{ form.email }}
+    {% for error in form.email.errors %}
+        {{ error }}
+    {% endfor %}
     <!-- First Name -->
     {{ form.first_name.label }}
     {{ form.first_name }}
+    {% for first_name in form.first_name.errors %}
+        {{ error }}
+    {% endfor %}
     <!-- Last Name -->
     {{ form.last_name.label }}
     {{ form.last_name }}
+    {% for error in form.last_name.errors %}
+        {{ error }}
+    {% endfor %}
     <!-- Password -->
     {{ form.password.label }}
     {{ form.password }}
+    {% for error in form.password.errors %}
+        {{ error }}
+    {% endfor %}
     <!-- Confirm Password -->
     {{ form.confirm_password.label }}
     {{ form.confirm_password }}
+    {% for error in form.confirm_password.errors %}
+        {{ error }}
+    {% endfor %}
     <!-- Submit -->
     {{ form.submit(value=form.submit.label.text) }}
 </form>
