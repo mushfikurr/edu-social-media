@@ -4,6 +4,7 @@ settings.json
 
 # Config for project
 lore/config.json
+lore/lore.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

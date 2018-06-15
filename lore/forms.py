@@ -19,11 +19,11 @@ class RegisterForm(FlaskForm):
         validators=[DataRequired(), Email()]
     )
     first_name = StringField(
-        'First Name',
+        'Forename',
         validators=name_validator
     )
     last_name = StringField(
-        'Last Name',
+        'Surname',
         validators=name_validator
     )
     password = PasswordField(
