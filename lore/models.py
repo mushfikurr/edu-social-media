@@ -1,4 +1,7 @@
 from lore import db
+from datetime import datetime
+
+# TODO: Relationship between User and Posts
 
 
 class User(db.Model):
@@ -20,3 +23,16 @@ class User(db.Model):
             f'{self.last_name}',
             f'{self.password})'
         )
+
+
+class Post(db.Model):
+    """
+    Model for a post that a user can have
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.String(200), nullable=False)
+    publish_date = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.utcnow
+    )

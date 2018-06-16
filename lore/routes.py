@@ -1,9 +1,9 @@
 from flask import render_template, redirect, url_for
-from lore import app, db
+from lore import app, db, bcrypt
 from lore.forms import RegisterForm, LoginForm
 from lore.models import User
 
-# TODO: Integrate database (register a user, check if user in db, etc.)
+# TODO: Hash passwords
 
 
 @app.route('/')
@@ -27,12 +27,14 @@ def on_register(form_data):
     """
     Fired when user passes all validation.
     """
+    password = form_data['password']
+    hashed = bcrypt.generate_password_hash(password).decode('utf-8')
     new_user = User(
         username=form_data['username'],
         email=form_data['email'],
         first_name=form_data['first_name'],
         last_name=form_data['last_name'],
-        password=form_data['password']
+        password=hashed
     )
     db.session.add(new_user)
     db.session.commit()
@@ -47,8 +49,6 @@ def register():
     if register_form.validate_on_submit():
         on_register(register_form.data)
         return redirect(url_for('home'))
-    else:
-        print('user failed to register')
     return render_template(
         'register.html',
         form=register_form,
@@ -63,7 +63,7 @@ def on_login(form_data):
     username_input = form_data['username']
     password_input = form_data['password']
     user_query = User.query.filter_by(username=username_input).first()
-    if user_query and user_query.password == password_input:
+    if user_query and bcrypt.check_password_hash(user_query.password, password_input):
         print("user logged in successfully")
     else:
         raise ValueError('Invalid credentials')
