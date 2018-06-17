@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>{{ current_user.username }}</h2>
+    <h3>{{ current_user.email }}</h3>
+    <h2>{{ current_user.first_name }}</h2>
+    <h2>{{ current_user.last_name }}</h2>
+    {% if posts %}
+        {% for post in posts %}
+            <h1>{{ post.title }}</h1>
+            <p>{{ post.body }}</p>
+        {% endfor %}
+    {% else %}
+        <h1>This user has no posts :(</h1>
+    {% endif %}
+{% endblock content %}

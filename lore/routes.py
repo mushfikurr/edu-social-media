@@ -1,9 +1,8 @@
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, flash
+from flask_login import current_user, login_required, login_user, logout_user
 from lore import app, db, bcrypt
 from lore.forms import RegisterForm, LoginForm
-from lore.models import User
-
-# TODO: Hash passwords
+from lore.models import User, Post
 
 
 @app.route('/')
@@ -38,6 +37,7 @@ def on_register(form_data):
     )
     db.session.add(new_user)
     db.session.commit()
+    flash('Account created', 'info')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -56,17 +56,31 @@ def register():
     )
 
 
-def on_login(form_data):
+def on_login(form):
     """
     Fired when user logs in after passing validation.
     """
+    form_data = form.data
     username_input = form_data['username']
     password_input = form_data['password']
     user_query = User.query.filter_by(username=username_input).first()
     if user_query and bcrypt.check_password_hash(user_query.password, password_input):
-        print("user logged in successfully")
+        login_user(user_query, remember=form.remember)
+        flash('user logged in successfully', 'info')
     else:
         raise ValueError('Invalid credentials')
+
+
+@app.route('/account')
+@login_required
+def account():
+    """
+    Endpooint for acc page.
+    Requires to be logged in.
+    """
+    posts = current_user.posts
+    return render_template('account.html', posts=posts)
+
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -77,12 +91,10 @@ def login():
     login_form = LoginForm()
     if login_form.validate_on_submit():
         try:
-            on_login(login_form.data)
+            on_login(login_form)
             return redirect(url_for('home'))
         except ValueError:
             print('Invalid credentials')
-    else:
-        print('user failed to login')
     return render_template(
         'login.html',
         form=login_form,
