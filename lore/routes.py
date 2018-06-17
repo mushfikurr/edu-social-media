@@ -82,6 +82,15 @@ def account():
     return render_template('account.html', posts=posts)
 
 
+@app.route('/logout', methods=['GET', 'POST'])
+@login_required
+def logout():
+    """
+    Endpoint for logging out.
+    """
+    logout_user()
+    return redirect(url_for('home'))
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
