@@ -7,6 +7,32 @@
     <p>{{ current_user.first_name }}</p>
     <p>{{ current_user.last_name }}</p>
     <a href="{{ url_for('logout') }}">Logout</a>
+    <!-- Edit Account Information -->
+    <form method="POST">
+        <ul>
+            <li>{{ form.username.label }}</li>
+            <li>{{ form.username }}</li>
+            {% for error in form.username.errors %}
+                {{ error }}
+            {% endfor %}
+            <li>{{ form.email.label }}</li>
+            <li>{{ form.email }}</li>
+            {% for error in form.email.errors %}
+                {{ error }}
+            {% endfor %}
+            <li>{{ form.first_name.label }}</li>
+            <li>{{ form.first_name }}</li>
+            {% for error in form.first_name.errors %}
+                {{ error }}
+            {% endfor %}
+            <li>{{ form.last_name.label }}</li>
+            <li>{{ form.last_name }}</li>
+            {% for error in form.last_name.errors %}
+                {{ error }}
+            {% endfor %}
+            {{ form.submit }}
+        </ul>
+    </form>
     <!-- Posts -->
     <h2>Posts</h2>
     {% if posts %}
