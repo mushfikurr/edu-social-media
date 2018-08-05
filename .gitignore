@@ -3,7 +3,7 @@
 settings.json
 
 # Config for project
-lore/config.json
+lore/.env
 lore/lore.db
 
 # Byte-compiled / optimized / DLL files

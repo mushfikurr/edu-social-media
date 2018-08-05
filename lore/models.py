@@ -45,6 +45,7 @@ class Post(db.Model):
     )
     # Foreign key to refer to User
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+       
 
     def __repr__(self):
         return f'Post({self.title}, {self.body}, {self.publish_date})'

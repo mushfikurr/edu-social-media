@@ -1,16 +1,17 @@
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from flask_login import LoginManager
-from lore.constants import SECRET_KEY
+from lore.config import Config
 
-# App initialisation
+# App start & config
 app = Flask(__name__)
-app.config['SECRET_KEY'] = SECRET_KEY
+app.config.from_object(Config)
 
-# Databse (Temporary)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lore.db'
+# Database
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 # Bcrypt
 bcrypt = Bcrypt(app)

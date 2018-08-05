@@ -48,27 +48,12 @@ def register():
     register_form = RegisterForm()
     if register_form.validate_on_submit():
         on_register(register_form.data)
-        return redirect(url_for('home'))
+        return redirect(url_for('app.home'))
     return render_template(
         'register.html',
         form=register_form,
         title='Register'
     )
-
-
-def on_login(form):
-    """
-    Fired when user logs in after passing validation.
-    """
-    form_data = form.data
-    username_input = form_data['username']
-    password_input = form_data['password']
-    user_query = User.query.filter_by(username=username_input).first()
-    if user_query and bcrypt.check_password_hash(user_query.password, password_input):
-        login_user(user_query, remember=form.remember)
-        flash('user logged in successfully', 'info')
-    else:
-        raise ValueError('Invalid credentials')
 
 
 def on_edit(form):
@@ -95,7 +80,7 @@ def account():
     if form.validate_on_submit():
         print('validated form')
         on_edit(form)
-        return redirect(url_for('account'))
+        return redirect(url_for('app.account'))
     elif request.method == 'GET':
         print('this is a get request')
         form.username.data = current_user.username
@@ -103,6 +88,21 @@ def account():
         form.first_name.data = current_user.first_name
         form.last_name.data = current_user.last_name
     return render_template('account.html', form=form, posts=posts)
+
+
+def on_login(form):
+    """
+    Fired when user logs in after passing validation.
+    """
+    form_data = form.data
+    username_input = form_data['username']
+    password_input = form_data['password']
+    user_query = User.query.filter_by(username=username_input).first()
+    if user_query and bcrypt.check_password_hash(user_query.password, password_input):
+        login_user(user_query, remember=form.remember)
+        flash('user logged in successfully', 'info')
+    else:
+        raise ValueError('Invalid credentials')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -114,7 +114,7 @@ def login():
     if login_form.validate_on_submit():
         try:
             on_login(login_form)
-            return redirect(url_for('home'))
+            return redirect(url_for('app.home'))
         except ValueError:
             print('Invalid credentials')
     return render_template(
@@ -132,4 +132,4 @@ def logout():
     Cleans up 'Remember Me' session
     """
     logout_user()
-    return redirect(url_for('home'))
+    return redirect(url_for('app.home'))
