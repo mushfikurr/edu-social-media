@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import current_user, login_required, login_user, logout_user
 from lore import app, db, bcrypt
-from lore.forms import RegisterForm, LoginForm, UpdateAccountForm
+from lore.forms import RegisterForm, LoginForm
 from lore.models import User, Post
 
 
@@ -56,16 +56,6 @@ def register():
     )
 
 
-def on_edit(form):
-    current_user.username = form.username.data
-    current_user.email = form.email.data
-    current_user.first_name = form.first_name.data
-    current_user.last_name = form.last_name.data
-
-    db.session.commit()
-    print('on edit')
-
-
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
@@ -75,34 +65,7 @@ def account():
     """
     print('post request rec')
     posts = current_user.posts
-    form = UpdateAccountForm()
-
-    if form.validate_on_submit():
-        print('validated form')
-        on_edit(form)
-        return redirect(url_for('app.account'))
-    elif request.method == 'GET':
-        print('this is a get request')
-        form.username.data = current_user.username
-        form.email.data = current_user.email
-        form.first_name.data = current_user.first_name
-        form.last_name.data = current_user.last_name
-    return render_template('account.html', form=form, posts=posts)
-
-
-def on_login(form):
-    """
-    Fired when user logs in after passing validation.
-    """
-    form_data = form.data
-    username_input = form_data['username']
-    password_input = form_data['password']
-    user_query = User.query.filter_by(username=username_input).first()
-    if user_query and bcrypt.check_password_hash(user_query.password, password_input):
-        login_user(user_query, remember=form.remember)
-        flash('user logged in successfully', 'info')
-    else:
-        raise ValueError('Invalid credentials')
+    return render_template('account.html', posts=posts)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -110,18 +73,19 @@ def login():
     """
     Endpoint for logging in.
     """
-    login_form = LoginForm()
-    if login_form.validate_on_submit():
-        try:
-            on_login(login_form)
-            return redirect(url_for('app.home'))
-        except ValueError:
-            print('Invalid credentials')
-    return render_template(
-        'login.html',
-        form=login_form,
-        title='Login'
-    )
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is None or not user.check_password(form.password.data):
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+
+        login_user(user, remember=form.remember_me.data)
+        return redirect(url_for('index'))
+    return render_template('login.html', form=form)
 
 
 @app.route('/logout', methods=['GET', 'POST'])
@@ -132,4 +96,4 @@ def logout():
     Cleans up 'Remember Me' session
     """
     logout_user()
-    return redirect(url_for('app.home'))
+    return redirect(url_for('home'))
