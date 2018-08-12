@@ -3,21 +3,30 @@
 <form method="POST">
     {{ form.hidden_tag() }}
     <!-- Username -->
-    {{ form.username.label }}
-    {{ form.username }}
-    {% for error in form.username.errors %}
-        {{ error }}
-    {% endfor %}
+    <p>
+        {{ form.username.label }}
+        {{ form.username }}
+        {% for error in form.username.errors %}
+            {{ error }}
+        {% endfor %}
+    </p>
     <!-- Password -->
-    {{ form.password.label }}
-    {{ form.password }}
-    {% for error in form.password.errors %}
-        {{ error }}
-    {% endfor %}
+    <p>
+        {{ form.password.label }}
+        {{ form.password }}
+        {% for error in form.password.errors %}
+            {{ error }}
+        {% endfor %}
+    </p>
     <!-- Remember -->
-    {{ form.remember.label }}
-    {{ form.remember }}
+    <p>
+        {{ form.remember.label }}
+        {{ form.remember }}
+    </p>
+
     <!-- Submit -->
-    {{ form.submit(value=form.submit.label.text) }}
+    <p>
+        {{ form.submit(value=form.submit.label.text) }}
+    </p>
 </form>
 {% endblock %}

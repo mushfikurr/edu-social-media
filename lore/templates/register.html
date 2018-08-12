@@ -1,44 +1,59 @@
 {% extends "layout.html" %}
 {% block content %}
+<h1>Login</h1>
 <form method="POST">
     {{ form.hidden_tag() }}
     <!-- Username -->
-    {{ form.username.label }}
-    {{ form.username }}
-    {% for error in form.username.errors %}
-        {{ error }}
-    {% endfor %}
+    <p>
+        {{ form.username.label }}
+        {{ form.username }}
+        {% for error in form.username.errors %}
+            {{ error }}
+        {% endfor %}
+    </p>
     <!-- Email -->
-    {{ form.email.label }}
-    {{ form.email }}
-    {% for error in form.email.errors %}
-        {{ error }}
-    {% endfor %}
+    <p>
+        {{ form.email.label }}
+        {{ form.email }}
+        {% for error in form.email.errors %}
+            {{ error }}
+        {% endfor %}
+    </p>
     <!-- First Name -->
-    {{ form.first_name.label }}
-    {{ form.first_name }}
-    {% for first_name in form.first_name.errors %}
-        {{ error }}
-    {% endfor %}
+    <p>
+        {{ form.first_name.label }}
+        {{ form.first_name }}
+        {% for first_name in form.first_name.errors %}
+            {{ error }}
+        {% endfor %}
+    </p>
     <!-- Last Name -->
-    {{ form.last_name.label }}
-    {{ form.last_name }}
-    {% for error in form.last_name.errors %}
-        {{ error }}
-    {% endfor %}
+    <p>
+        {{ form.last_name.label }}
+        {{ form.last_name }}
+        {% for error in form.last_name.errors %}
+            {{ error }}
+        {% endfor %}
+    </p>
     <!-- Password -->
-    {{ form.password.label }}
-    {{ form.password }}
-    {% for error in form.password.errors %}
-        {{ error }}
-    {% endfor %}
+    <p>
+        {{ form.password.label }}
+        {{ form.password }}
+        {% for error in form.password.errors %}
+            {{ error }}
+        {% endfor %}
+    </p>
     <!-- Confirm Password -->
-    {{ form.confirm_password.label }}
-    {{ form.confirm_password }}
-    {% for error in form.confirm_password.errors %}
-        {{ error }}
-    {% endfor %}
+    <p>
+        {{ form.confirm_password.label }}
+        {{ form.confirm_password }}
+        {% for error in form.confirm_password.errors %}
+            {{ error }}
+        {% endfor %}
+    </p>
     <!-- Submit -->
-    {{ form.submit(value=form.submit.label.text) }}
+    <p>
+        {{ form.submit(value=form.submit.label.text) }}
+    </p>
 </form>
 {% endblock %}

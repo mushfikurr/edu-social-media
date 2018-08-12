@@ -30,6 +30,10 @@
             {% for error in form.last_name.errors %}
                 {{ error }}
             {% endfor %}
+            <li>{{ form.about_me }}</li>
+            {% for error in form.about_me.errors %}
+                {{ error }}
+            {% endfor %}
             {{ form.submit }}
         </ul>
     </form>

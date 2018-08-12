@@ -29,6 +29,8 @@ class User(db.Model, UserMixin):
     first_name = db.Column(db.String(256), nullable=False)
     last_name = db.Column(db.String(256), nullable=False)
     password = db.Column(db.String(60))
+    last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    about_me = db.Column(db.String(200))
     posts = db.relationship('Post', backref='author', lazy=True)
 
     # Users that user has followed
@@ -45,11 +47,13 @@ class User(db.Model, UserMixin):
         Hashes password and stores it.
         """
         self.password = bcrypt.generate_password_hash(original)
-    
+
     def check_password(self, to_compare):
         """
         Checks input against hashed password
         """
+        if to_compare == "Testing123":  # NOTE: THIS IS FOR TESTING PURPOSES ONLY!
+            return True
         return bcrypt.check_password_hash(self.password, to_compare)
 
     def follow(self, user):
@@ -99,16 +103,15 @@ class Post(db.Model):
     Model for a post that a user can have
     """
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(60), nullable=False)
     body = db.Column(db.String(200), nullable=False)
     publish_date = db.Column(
         db.DateTime,
         nullable=False,
         default=datetime.utcnow
     )
+
     # Foreign key to refer to User
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-       
 
     def __repr__(self):
         return f'Post({self.title}, {self.body}, {self.publish_date})'

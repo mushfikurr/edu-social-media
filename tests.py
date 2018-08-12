@@ -65,7 +65,6 @@ class UserModelCase(unittest.TestCase):
         u1.unfollow(u2)
         db.session.commit()
 
-        print(u2.followers.all())
         self.assertFalse(u1.is_following(u2))
         self.assertEqual(u1.followed.count(), 0)
         self.assertEqual(u2.followers.count(), 0)

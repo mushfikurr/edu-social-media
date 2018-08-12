@@ -6,10 +6,19 @@
         {% else %}
             <title>Lore</title>
         {% endif %}
-        <title>Lore | </title>
     </head>
     <body>
-        <h1>Lore</h1>
+        <div>
+            <b>Lore</b>
+            <a href="{{ url_for('index') }}">Home</a>
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('register') }}">Register</a>
+                <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </div>
         {% block content %}{% endblock %}
     </body>
 </html>
