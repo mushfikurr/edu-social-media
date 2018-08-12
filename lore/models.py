@@ -52,8 +52,6 @@ class User(db.Model, UserMixin):
         """
         Checks input against hashed password
         """
-        if to_compare == "Testing123":  # NOTE: THIS IS FOR TESTING PURPOSES ONLY!
-            return True
         return bcrypt.check_password_hash(self.password, to_compare)
 
     def follow(self, user):
@@ -79,7 +77,7 @@ class User(db.Model, UserMixin):
         """
         return self.followed.filter(
             followers.c.followed_id == user.id).count() > 0
-    
+
     def followed_posts(self):
         """
         Returns followed users and own posts in a timeline fashion
