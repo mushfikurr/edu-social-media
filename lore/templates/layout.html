@@ -12,6 +12,7 @@
             {% if current_user.is_authenticated %}
                 <b>Lore ({{ current_user.username }})</b>
                 <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('explore') }}">Explore</a>
                 <a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
                 <a href="{{ url_for('logout') }}">Logout</a>
             {% else %}

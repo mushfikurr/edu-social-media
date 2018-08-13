@@ -15,3 +15,4 @@ class Config(object):
         'sqlite:///' + os.path.join(basedir, 'lore.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.getenv("FLASK-SECRET-KEY")
+    POSTS_PER_PAGE = 1

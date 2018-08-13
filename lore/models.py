@@ -31,7 +31,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     about_me = db.Column(db.String(200))
-    posts = db.relationship('Post', backref='author', lazy=True)
+    posts = db.relationship('Post', backref='author', lazy='dynamic')
 
     # Users that user has followed
     followed = db.relationship(
