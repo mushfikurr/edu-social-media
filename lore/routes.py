@@ -128,7 +128,7 @@ def edit_account():
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    posts = current_user.posts
+    posts = user.posts
     return render_template('user.html', user=user, posts=posts)
 
 
