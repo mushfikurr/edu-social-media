@@ -1,5 +1,80 @@
-<h1>This is the landing page.</h1>
-<h2>Some description of the website.</h2>
-<hr>
-<a href="{{ url_for('register') }}">Register</a>
-<a href="{{ url_for('login') }}">Login</a>
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		{% if title %}
+            <title>Lore | {{ title }}</title>
+        {% else %}
+            <title>Lore</title>
+        {% endif %}
+		<link rel="icon" href="img/favicon.ico">
+		<!-- CSS FILES -->
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/css/uikit.min.css">
+
+        <style>
+			.wrap::before {
+				position: absolute;
+				height: 100vh;
+				width: 100vw;
+				content: '';
+				z-index: 1;
+				background-color: rgba(0,0,0,0.7);
+			}
+			.lead {
+				font-size: 1.175em;
+				font-weight: 300;
+            }        
+		</style>
+    </head>
+    
+	<body class="uk-light wrap uk-background-norepeat uk-background-cover uk-background-center uk-background-secondary" style="background-image: url(static/img/adult-cafe-null.jpg)">
+		<div class="uk-offcanvas-content">
+			<div class="uk-flex uk-flex-center uk-flex-middle uk-height-viewport uk-position-z-index uk-position-relative tinted-image" data-uk-height-viewport="min-height: 400">
+				
+				<!-- NAV -->
+				<div class="uk-position-top">
+					<div class="uk-container uk-container-small">
+						<nav class="uk-navbar-container uk-navbar-transparent" data-uk-navbar>
+                            <div class="uk-navbar-left">
+                                <ul class="uk-navbar-nav">
+                                    <li class="uk-active uk-margin-right"><a>Lore</a></li>
+                                </ul>
+                            </div>                        
+							<div class="uk-navbar-right">
+								<ul class="uk-navbar-nav">
+									<li class="uk-visible@s"><a href="{{ url_for('login') }}">Login</a></li>
+									<li class="uk-visible@s"><a href="{{ url_for('register') }}">Register</a></li>
+								</ul>
+							</div>
+						</nav>
+					</div>
+				</div>
+				<!-- /NAV -->
+
+				<!-- TEXT -->
+				<div class="uk-container uk-container-small uk-flex-auto uk-text-center" data-uk-scrollspy="target: > .animate; cls: uk-animation-slide-bottom-small uk-invisible; delay: 300">
+					<h2 class="uk-heading-primary animate uk-invisible" style="font-weight: 600;">Wise up.</h2>
+					<div class="uk-width-4-5@m uk-margin-auto animate uk-invisible">
+						<p class="lead">Lore is a smart social media, designed with students in mind.</p>
+					</div>
+					<div class="uk-margin-medium-top animate uk-invisible" data-uk-margin data-uk-scrollspy-class="uk-animation-fade uk-invisible">
+						<a class="uk-button uk-button-default uk-button-large uk-width-auto@s" title="Learn More" href="{{ url_for('register') }}">JOIN</a>
+					</div>
+				</div>
+				<!-- /TEXT -->
+
+				<!-- FOOT -->
+				<div class="uk-position-bottom-center uk-position-small">
+					<span class="uk-text-small uk-text-center">Created by <a href="https://github.com/mushydev">@mushydev</a></span>
+				</div>
+				<!-- /FOOT -->
+
+			</div>
+		</div>
+		<!-- JS FILES -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/js/uikit.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/js/uikit-icons.min.js"></script>
+	</body>
+	</html>
