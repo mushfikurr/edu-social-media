@@ -6,7 +6,7 @@ from flask_login import LoginManager
 from lore.config import Config
 
 # App start & config
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 app.config.from_object(Config)
 
 # Database
