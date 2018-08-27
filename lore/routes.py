@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import current_user, login_required, login_user, logout_user
-from lore import app, db, bcrypt
+from lore import app, db
 from lore.forms import RegisterForm, LoginForm, PostForm
 from lore.models import User, Post
 from datetime import datetime
@@ -98,14 +98,13 @@ def register():
     """
     register_form = RegisterForm()
     if register_form.validate_on_submit():
-        form_data = register_form.form_data
         new_user = User(
-            username=form_data['username'],
-            email=form_data['email'],
-            first_name=form_data['first_name'],
-            last_name=form_data['last_name']
+            username=register_form.username.data,
+            email=register_form.email.data,
+            first_name=register_form.first_name.data,
+            last_name=register_form.last_name.data
         )
-        new_user.set_password(form_data['password'])
+        new_user.set_password(register_form.password.data)
         db.session.add(new_user)
         db.session.commit()
         flash('Account created', 'info')

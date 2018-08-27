@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from lore.models import User
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
+from wtforms import (StringField, PasswordField, SubmitField, BooleanField,
+                     TextAreaField)
 from wtforms.validators import (DataRequired, Length, Email, EqualTo,
                                 ValidationError)
 from flask_login import current_user
@@ -47,8 +48,9 @@ class RegisterForm(FlaskForm):
         """
         query_user = User.query.filter_by(username=username.data).first()
         if query_user:
-            print('failed username validation')
-            raise ValidationError('That username is taken. Please try another one.')
+            raise ValidationError(
+                'That username is taken. Please try another one.'
+            )
 
     def validate_email(self, email):
         """
@@ -57,8 +59,9 @@ class RegisterForm(FlaskForm):
         """
         query_email = User.query.filter_by(email=email.data).first()
         if query_email:
-            print('failed username validation')
-            raise ValidationError('That username is taken. Please try another one.')
+            raise ValidationError(
+                'That username is taken. Please try another one.'
+            )
 
 
 class LoginForm(FlaskForm):
@@ -119,7 +122,9 @@ class UpdateAccountForm(FlaskForm):
             query_user = User.query.filter_by(username=username.data).first()
             if query_user:
                 print('failed username validation')
-                raise ValidationError('That username is taken. Please try another one.')
+                raise ValidationError(
+                    'That username is taken. Please try another one.'
+                )
 
     def validate_email(self, email):
         """
@@ -130,7 +135,9 @@ class UpdateAccountForm(FlaskForm):
             query_user = User.query.filter_by(username=email.data).first()
             if query_user:
                 print('failed email validation')
-                raise ValidationError('That email address is taken. Please try another one.')
+                raise ValidationError(
+                    'That email address is taken. Please try another one.'
+                )
 
 
 class PostForm(FlaskForm):

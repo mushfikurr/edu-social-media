@@ -35,7 +35,7 @@ class User(db.Model, UserMixin):
 
     # Users that user has followed
     followed = db.relationship(
-        'User', secondary=followers,    
+        'User', secondary=followers,
         primaryjoin=(followers.c.follower_id == id),
         secondaryjoin=(followers.c.followed_id == id),
         backref=db.backref('followers', lazy='dynamic'),
@@ -46,7 +46,7 @@ class User(db.Model, UserMixin):
         """
         Hashes password and stores it.
         """
-        self.password = bcrypt.generate_password_hash(original)
+        self.password = bcrypt.generate_password_hash(original).decode('utf-8')
 
     def check_password(self, to_compare):
         """
@@ -93,7 +93,7 @@ class User(db.Model, UserMixin):
         """
         Displays how User model is printed
         """
-        return f'User({self.username}, {self.email}, {self.first_name}, {self.last_name}, {self.password})'
+        return f'User({self.username}, {self.email})'
 
 
 class Post(db.Model):
@@ -101,7 +101,7 @@ class Post(db.Model):
     Model for a post that a user can have
     """
     id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.String(200), nullable=False)
+    body = db.Column(db.String(400), nullable=False)
     publish_date = db.Column(
         db.DateTime,
         nullable=False,
@@ -113,3 +113,5 @@ class Post(db.Model):
 
     def __repr__(self):
         return f'Post({self.title}, {self.body}, {self.publish_date})'
+
+
