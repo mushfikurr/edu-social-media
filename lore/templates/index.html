@@ -1,31 +1,41 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>Hello, {{ current_user.username }}!</h2>
-    <form action="" method="post">
-        {% if form %}
-        {{ form.hidden_tag() }}
-            <p>
-                {{ form.body.label }}<br>
-                {{ form.body(cols=32, rows=4) }}<br>
-                {% for error in form.body.errors %}
-                <span style="color: red;">{{ error }}</span>
+    <div class="uk-container">
+        <div class="uk-section uk-section-large">
+            <div class="uk-container">
+                <form action="" method="post">
+                    {% if form %}
+                    {{ form.hidden_tag() }}
+                        <div class="uk-margin">
+                            {{ form.body(**{'class': 'uk-input uk-width uk-width-1-1', 'rows': '5', 'placeholder': 'Say something..'}) }}<br>
+                            {% for error in form.body.errors %}
+                            <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="uk-margin">
+                            {{ form.submit(**{'class': 'uk-button uk-button-primary uk-button-medium uk-margin'}) }}
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+            <div class="uk-container">
+                {% if form %}
+                    <h3>See what the people you follow are talking about.</h3>
+                    <hr>
+                {% else %}
+                    <h3>Explore what other people are talking about.</h3>
+                    <hr>
+                {% endif %}
+                {% for post in posts %}
+                    {% include "_post.html" %}
                 {% endfor %}
-            </p>
-            <p>{{ form.submit() }}</p>
-        {% endif %}
-    </form>
-    {% if form %}
-        <h3>See what the people you follow are talking about.</h3>
-    {% else %}
-        <h3>Explore what other people are talking about.</h3>
-    {% endif %}
-    {% for post in posts %}
-        {% include "_post.html" %}
-    {% endfor %}
-    {% if next_url %}
-        <a href="{{ next_url }}"><<</a>
-    {% endif %}
-    {% if prev_url %}
-        <a href="{{ prev_url }}">>></a>
-    {% endif %} 
+                {% if next_url %}
+                    <a href="{{ next_url }}"><<</a>
+                {% endif %}
+                {% if prev_url %}
+                    <a href="{{ prev_url }}">>></a>
+                {% endif %}
+            </div> 
+        </div>
+    </div>
 {% endblock content %}
