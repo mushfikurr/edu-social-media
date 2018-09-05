@@ -1,50 +1,60 @@
 {% extends "layout.html" %}
 {% block content %}
-    <!-- Account Information -->
-    <h2>Overview</h2>
-    <p>{{ current_user.username }}</p>
-    <p>{{ current_user.email }}</p>
-    <p>{{ current_user.first_name }}</p>
-    <p>{{ current_user.last_name }}</p>
-    <a href="{{ url_for('logout') }}">Logout</a>
     <!-- Edit Account Information -->
-    <form method="POST">
-        <ul>
-            <li>{{ form.username.label }}</li>
-            <li>{{ form.username }}</li>
-            {% for error in form.username.errors %}
-                {{ error }}
-            {% endfor %}
-            <li>{{ form.email.label }}</li>
-            <li>{{ form.email }}</li>
-            {% for error in form.email.errors %}
-                {{ error }}
-            {% endfor %}
-            <li>{{ form.first_name.label }}</li>
-            <li>{{ form.first_name }}</li>
-            {% for error in form.first_name.errors %}
-                {{ error }}
-            {% endfor %}
-            <li>{{ form.last_name.label }}</li>
-            <li>{{ form.last_name }}</li>
-            {% for error in form.last_name.errors %}
-                {{ error }}
-            {% endfor %}
-            <li>{{ form.about_me }}</li>
-            {% for error in form.about_me.errors %}
-                {{ error }}
-            {% endfor %}
-            {{ form.submit }}
-        </ul>
+    <form>
+        <div class="uk-container">
+            <div class="uk-section uk-section-large">
+                <fieldset class="uk-fieldset">
+
+                        <legend class="uk-legend">Update Profile</legend>
+                        
+                        <div class="uk-margin">
+                            {% if form.username.errors %}
+                                <div class="uk-inline">
+                                    <span class="uk-form-icon uk-form-icon" data-uk-icon="icon: user"></span>
+                                    {% for error in form.username.errors %}
+                                        {{ form.username( **{'class': 'uk-input uk-form-large uk-form-danger', 'placeholder': form.username.label.text, 'uk-tooltip': 'title: ' + error + '; pos: right;'} )}}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="uk-inline">
+                                    <span class="uk-form-icon uk-form-icon" data-uk-icon="icon: user"></span>
+                                    {{ form.username( **{'class': 'uk-input uk-form-large', 'placeholder': form.username.label.text} ) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="uk-margin">
+                            {% if form.email.errors %}
+                                <div class="uk-inline">
+                                    <span class="uk-form-icon uk-form-icon" data-uk-icon="icon: user"></span>
+                                    {% for error in form.email.errors %}
+                                        {{ form.email( **{'class': 'uk-input uk-form-large uk-form-danger', 'placeholder': form.email.label.text, 'uk-tooltip': 'title: ' + error + '; pos: right;'} )}}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="uk-inline">
+                                    <span class="uk-form-icon uk-form-icon" data-uk-icon="icon: email"></span>
+                                    {{ form.email( **{'class': 'uk-input uk-form-large', 'placeholder': form.email.label.text} ) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="uk-margin">
+                            <div class="uk-margin" uk-margin>
+                                <div uk-form-custom="target: true">
+                                    {{ form.picture() }}
+                                    <input class="uk-input uk-form-width-medium" type="text" placeholder="{{ form.picture.label.text }}">
+                                </div>
+                                {% if form.picture.errors %}
+                                    {% for error in form.picture.errors %}
+                                        <span class="uk-text-danger">{{ error }}</span></br>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            {{ form.submit( **{'class': 'uk-button uk-button-primary uk-button-medium'} ) }}
+                        </div>
+                
+                    </fieldset>
+            </div>
+        </div>
     </form>
-    <!-- Posts -->
-    <h2>Posts</h2>
-    {% if posts %}
-        {% for post in posts %}
-            <h3>{{ post.title }}</h1>
-            <p>{{ post.body }}</p>
-        {% endfor %}
-    {% else %}
-        <h3>This user has no posts :(</h3>
-    {% endif %}
 {% endblock content %}

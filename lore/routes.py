@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import current_user, login_required, login_user, logout_user
 from lore import app, db
-from lore.forms import RegisterForm, LoginForm, PostForm
+from lore.forms import RegisterForm, LoginForm, PostForm, UpdateAccountForm
 from lore.models import User, Post
 from datetime import datetime
 
@@ -158,7 +158,7 @@ def unfollow(username):
     return redirect(url_for('user', username=username))
 
 
-@app.route('/account', methods=['GET', 'POST'])
+@app.route('/edit_account', methods=['GET', 'POST'])
 @login_required
 def edit_account():
     """
@@ -166,7 +166,18 @@ def edit_account():
     NOTE: Not complete.
     """
     posts = current_user.posts
-    return render_template('account.html', posts=posts)
+    form = UpdateAccountForm()
+    if form.validate_on_submit():
+        if form.picture.data:
+            current_user.set_picture(form.picture.data)
+        current_user.set_email(form.email.data)
+        current_user.set_username(form.username.data)
+        flash('Your account has been updated!', 'success')
+        return redirect(url_for('account'))
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+    return render_template('edit_account.html', posts=posts, form=form)
 
 
 @app.route('/user/<username>')

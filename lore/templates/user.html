@@ -4,7 +4,10 @@
     <div class="uk-container">
         <div class="uk-section uk-section-medium">
             <div class="uk-container uk-padding">
-                <div>
+                <div uk-grid>
+                    <div>
+                        <img src={{ current_user.get_image_path() }} alt="Profile Picture">
+                    </div>
                     <div>
                         <h3>{{ user.username }} ({{user.first_name}}, {{user.last_name}})</h3>
                         {% if user.last_seen %}<p class="text-lead">Last seen: {{ user.last_seen }}</p>{% endif %}
