@@ -2,14 +2,11 @@ from flask import (render_template, redirect, url_for, flash, request,
                    current_app)
 from flask_login import current_user, login_required
 from lore import db
+from lore.main.avatar import resize_and_save
+from lore.main import bp
 from lore.main.forms import PostForm, UpdateAccountForm
 from lore.main.models import User, Post
 from datetime import datetime
-import secrets
-import os
-from PIL import Image
-from lore.main import bp
-
 
 @bp.before_request
 def before_request():
@@ -43,9 +40,9 @@ def index():
             db.session.commit()
             return redirect(url_for('main.index'))
 
-        next_url = url_for('index', page=posts.next_num) \
+        next_url = url_for('main.index', page=posts.next_num) \
             if posts.has_next else None
-        prev_url = url_for('index', page=posts.prev_num) \
+        prev_url = url_for('main.index', page=posts.prev_num) \
             if posts.has_prev else None
 
         return render_template(
@@ -72,13 +69,13 @@ def explore():
         current_app.config['POSTS_PER_PAGE'],
         False
     )
-    next_url = url_for('main.index', page=posts.next_num) \
+    next_url = url_for('main.explore', page=posts.next_num) \
         if posts.has_next else None
-    prev_url = url_for('main.index', page=posts.prev_num) \
+    prev_url = url_for('main.explore', page=posts.prev_num) \
         if posts.has_prev else None
 
     return render_template(
-        'main/index.html',
+        'main/explore.html',
         title='Explore',
         posts=posts.items,
         next_url=next_url,
@@ -127,24 +124,6 @@ def unfollow(username):
     return redirect(url_for('main.user', username=username))
 
 
-def save_picture(input_picture):
-    """
-    Takes input picture and saves it to the database as a set of characters
-    """
-    random_hex = secrets.token_hex(8)
-    _, f_ext = os.path.splitext(input_picture.filename)
-    picture_fn = random_hex + f_ext
-    picture_path = os.path.join(
-        current_app.root_path, 'static/profile-pictures', picture_fn)
-
-    output_size = (250, 250)
-    i = Image.open(input_picture)
-    i.thumbnail(output_size)
-    i.save(picture_path)
-
-    return picture_fn
-
-
 @bp.route('/edit_account', methods=['GET', 'POST'])
 @login_required
 def edit_account():
@@ -159,7 +138,7 @@ def edit_account():
     if form.validate_on_submit():
         if form.picture.data:
             print("Picture handling")
-            picture_file = save_picture(form.picture.data)
+            picture_file = resize_and_save(form.picture.data, (200, 200))
             print(picture_file)
             current_user.image_file = picture_file
             print(current_user.image_file)

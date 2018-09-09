@@ -48,54 +48,15 @@ class User(db.Model, UserMixin):
         lazy='dynamic'
     )
 
-    def set_picture(self, uploaded_picture):
-        """
-        Sets the users picture after resizing.
-        Saves locally in static/profile-pictures.
-        """
-        random_hex = secrets.token_hex(8)
-        _, f_ext = os.path.splitext(uploaded_picture.filename)
-        picture_fn = random_hex + f_ext
-        picture_path = os.path.join(
-            current_app.root_path,
-            'static/profile-pictures',
-            picture_fn
-        )
-
-        output_size = (125, 125)
-        i = Image.open(uploaded_picture)
-        i.thumbnail(output_size)
-        i.save(picture_path)
-
-        self.image_file = picture_fn
-        print(self.image_file)
-        print("SET PICTURE")
-        db.session.commit()
-
-    def set_email(self, new_email):
-        """
-        Sets the users email.
-        Updates the user's email stored locally in DB.
-        """
-        self.email = new_email
-        db.session.commit()
-
-    def set_username(self, new_username):
-        """
-        Sets the users username.
-        Updates the user's username stored locally in DB.
-        """
-        self.username = new_username
-        db.session.commit()
-
     def set_password(self, original):
         """
         Hashes password and stores it.
         """
         self.password = bcrypt.generate_password_hash(original).decode('utf-8')
- 
+
     def get_image_path(self):
-        return url_for('static', filename='profile-pictures/' + self.image_file)
+        return url_for(
+            'static', filename='profile-pictures/' + self.image_file)
 
     def check_password(self, to_compare):
         """
