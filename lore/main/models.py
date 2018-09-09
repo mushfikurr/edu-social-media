@@ -1,6 +1,6 @@
-from lore import app, db, login, bcrypt
+from lore import db, login, bcrypt
 from datetime import datetime
-from flask import url_for
+from flask import url_for, current_app
 from flask_login import UserMixin
 from PIL import Image
 import secrets
@@ -39,7 +39,6 @@ class User(db.Model, UserMixin):
     about_me = db.Column(db.String(200))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
 
-
     # Users that user has followed
     followed = db.relationship(
         'User', secondary=followers,
@@ -57,8 +56,11 @@ class User(db.Model, UserMixin):
         random_hex = secrets.token_hex(8)
         _, f_ext = os.path.splitext(uploaded_picture.filename)
         picture_fn = random_hex + f_ext
-        picture_path = os.path.join(app.root_path, 'static/profile-pictures',
-                                    picture_fn)
+        picture_path = os.path.join(
+            current_app.root_path,
+            'static/profile-pictures',
+            picture_fn
+        )
 
         output_size = (125, 125)
         i = Image.open(uploaded_picture)
@@ -69,7 +71,7 @@ class User(db.Model, UserMixin):
         print(self.image_file)
         print("SET PICTURE")
         db.session.commit()
-    
+
     def set_email(self, new_email):
         """
         Sets the users email.
@@ -91,7 +93,7 @@ class User(db.Model, UserMixin):
         Hashes password and stores it.
         """
         self.password = bcrypt.generate_password_hash(original).decode('utf-8')
-    
+ 
     def get_image_path(self):
         return url_for('static', filename='profile-pictures/' + self.image_file)
 
@@ -150,7 +152,7 @@ class RevokedToken(db.Model):
     def add(self):
         db.session.add(self)
         db.session.commit()
- 
+
     @classmethod
     def is_jti_blacklisted(cls, jti):
         query = cls.query.filter_by(jti=jti).first()
@@ -174,5 +176,3 @@ class Post(db.Model):
 
     def __repr__(self):
         return f'Post({self.title}, {self.body}, {self.publish_date})'
-
-

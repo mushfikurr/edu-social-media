@@ -6,22 +6,42 @@ from flask_login import LoginManager
 from lore.config import Config
 from flask_jwt_extended import JWTManager
 
-# App start & config
-app = Flask(__name__, static_url_path='/static')
-app.config.from_object(Config)
+db = SQLAlchemy()
+migrate = Migrate()
+jwt = JWTManager()
+bcrypt = Bcrypt()
 
-# Database
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-jwt = JWTManager(app)
-
-# Bcrypt
-bcrypt = Bcrypt(app)
-
-# Login Manager
-login = LoginManager(app)
-login.login_view = 'login'
+# Login Configuration
+login = LoginManager()
+login.login_view = 'auth.login'
 login.login_message_category = 'info'
 
 
-from lore import routes
+def create_app(config_class=Config):
+    # App start & config
+    app = Flask(__name__, static_url_path='/static')
+    app.config.from_object(Config)
+
+    # Blueprints
+    from lore.auth import bp as auth_bp
+    app.register_blueprint(auth_bp, url_prefix='/auth')
+    print(" * Loaded Auth")
+    from lore.main import bp as main_bp
+    app.register_blueprint(main_bp)
+    print(" * Loaded Main")
+    from lore.api import bp as api_bp
+    app.register_blueprint(api_bp, url_prefix='/api')
+    print(" * Loaded API")
+
+    # Database
+    db.init_app(app)
+    migrate.init_app(app)
+    jwt.init_app(app)
+
+    # Bcrypt
+    bcrypt.init_app(app)
+
+    # Login Manager
+    login.init_app(app)
+
+    return app

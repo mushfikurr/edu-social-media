@@ -1,7 +1,8 @@
-{% extends "layout.html" %}
+{% extends "main/layout.html" %}
 {% block content %}
     <!-- Edit Account Information -->
-    <form>
+    <form method="POST" action="" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
         <div class="uk-container">
             <div class="uk-section uk-section-large">
                 <fieldset class="uk-fieldset">
@@ -40,10 +41,7 @@
                         </div>
                         <div class="uk-margin">
                             <div class="uk-margin" uk-margin>
-                                <div uk-form-custom="target: true">
-                                    {{ form.picture() }}
-                                    <input class="uk-input uk-form-width-medium" type="text" placeholder="{{ form.picture.label.text }}">
-                                </div>
+                                {{ form.picture }}
                                 {% if form.picture.errors %}
                                     {% for error in form.picture.errors %}
                                         <span class="uk-text-danger">{{ error }}</span></br>

@@ -7,6 +7,8 @@
             <title>Lore</title>
         {% endif %}
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/css/uikit.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/js/uikit.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/js/uikit-icons.min.js"></script>
     </head>
     <style>
         #top-head {
@@ -14,6 +16,9 @@
             top: 0;
             left:0;
             right:0;
+        }
+        body {
+            margin-top: 80px;
         }
     </style>
     <body>
@@ -23,34 +28,43 @@
                     <nav class="uk-navbar uk-light" data-uk-navbar="mode:click">
                         <div class="uk-navbar-left">
                             <ul class="uk-navbar-nav uk-visible@m">
-                                <li class="uk-active uk-margin-right"><a href={{ url_for('index') }}>Lore</a></li>
+                                <li class="uk-active uk-margin-right"><a href={{ url_for('main.index') }}>Lore</a></li>
                                 {% if title == "Home" %}
-                                <li class="uk-active"><a href={{ url_for('index') }}>Home</a></li>
+                                <li class="uk-active"><a href={{ url_for('main.index') }}>Home</a></li>
                                 {% else %}
-                                <li><a href={{ url_for('index') }}>Home</a></li>
+                                <li><a href={{ url_for('main.index') }}>Home</a></li>
                                 {% endif %}
                                 {% if title == "Explore" %}
-                                <li class="uk-active"><a href={{ url_for('explore') }}>Explore</a></li>
+                                <li class="uk-active"><a href={{ url_for('main.explore') }}>Explore</a></li>
                                 {% else %}
-                                <li><a href={{ url_for('explore') }}>Explore</a></li>
+                                <li><a href={{ url_for('main.explore') }}>Explore</a></li>
                                 {% endif %}
                                 {% if title == "Stream" %}
-                                <li class="uk-active"><a href={{ url_for('index') }}>Stream</a></li>
+                                <li class="uk-active"><a href={{ url_for('main.index') }}>Stream</a></li>
                                 {% else %}
-                                <li><a href={{ url_for('index') }}>Stream</a></li>
+                                <li><a href={{ url_for('main.index') }}>Stream</a></li>
                                 {% endif %}
                             </ul>
                         </div>
                         <div class="uk-navbar-right">
                             <ul class="uk-navbar-nav">
-                                <li><a href="{{ url_for('user', username=current_user.username) }}" data-uk-icon="icon:user"> {{ current_user.username }}</a></li>
-                                <li><a href={{ url_for('logout') }} data-uk-icon="icon:sign-out"></a></li>
+                                <li><a href="{{ url_for('main.user', username=current_user.username) }}" data-uk-icon="icon:user"> {{ current_user.username }}</a></li>
+                                <li><a href={{ url_for('auth.logout') }} data-uk-icon="icon:sign-out"></a></li>
                             </ul>
                         </div>
                     </nav>
                 </div>
             </header>
         {% endif %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <script>
+                        UIkit.notification({message: "{{ message }}", status: "{{ category }}", timeout: 3000})
+                    </script>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
         {% block content %}{% endblock %}
         <!-- FOOT -->
         {% if current_user.anonymous %}
@@ -59,7 +73,5 @@
         </div>
         {% endif %}
         <!-- /FOOT -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/js/uikit.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/js/uikit-icons.min.js"></script>
     </body>
 </html>

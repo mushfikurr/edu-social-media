@@ -6,6 +6,7 @@ settings.json
 lore/.env
 lore/lore.db
 lore/static/
+lore/lore-front-end/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

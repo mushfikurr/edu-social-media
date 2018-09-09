@@ -44,8 +44,8 @@
                             </div>                        
 							<div class="uk-navbar-right">
 								<ul class="uk-navbar-nav">
-									<li class="uk-visible@s"><a href="{{ url_for('login') }}">Login</a></li>
-									<li class="uk-visible@s"><a href="{{ url_for('register') }}">Register</a></li>
+									<li class="uk-visible@s"><a href="{{ url_for('auth.login') }}">Login</a></li>
+									<li class="uk-visible@s"><a href="{{ url_for('auth.register') }}">Register</a></li>
 								</ul>
 							</div>
 						</nav>
@@ -60,7 +60,7 @@
 						<p class="lead">Lore is a smart social media, designed with students in mind.</p>
 					</div>
 					<div class="uk-margin-medium-top animate uk-invisible" data-uk-margin data-uk-scrollspy-class="uk-animation-fade uk-invisible">
-						<a class="uk-button uk-button-default uk-button-large uk-width-auto@s" title="Learn More" href="{{ url_for('register') }}">JOIN</a>
+						<a class="uk-button uk-button-default uk-button-large uk-width-auto@s" title="Learn More" href="{{ url_for('auth.register') }}">JOIN</a>
 					</div>
 				</div>
 				<!-- /TEXT -->

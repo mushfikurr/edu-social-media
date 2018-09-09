@@ -1,7 +1,7 @@
-{% extends "layout.html" %}
+{% extends "main/layout.html" %}
 {% block content %}
     <div class="uk-container">
-        <div class="uk-section uk-section-large">
+        <div class="uk-section uk-section-small">
             <div class="uk-container">
                 <form action="" method="post">
                     {% if form %}
@@ -20,14 +20,22 @@
             </div>
             <div class="uk-container">
                 {% if form %}
+                    {% if posts %}
                     <h3>See what the people you follow are talking about.</h3>
+                    {% if current_user.followed.count() == 0 %}
+                        <p class="uk-text-small uk-text-muted">Psst. You can find people <a href={{ url_for('main.explore') }}>here</a>!</p>
+                    {% endif %}
                     <hr>
+                    {% else %}
+                    <h3 class="uk-text-center uk-">Woah, your timeline is empty!</h3>
+                    <p class=" uk-text-center uk-text-medium uk-text-muted">Let's make some <a href={{ url_for('main.explore') }}>friends</a></p>
+                    {% endif %}
                 {% else %}
                     <h3>Explore what other people are talking about.</h3>
                     <hr>
                 {% endif %}
                 {% for post in posts %}
-                    {% include "_post.html" %}
+                    {% include "main/_post.html" %}
                 {% endfor %}
                 {% if next_url %}
                     <a href="{{ next_url }}"><<</a>

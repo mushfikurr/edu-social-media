@@ -1,0 +1,53 @@
+{% extends "main/layout.html" %}
+
+{% block content %}
+    <div class="uk-container">
+        <div class="uk-section uk-section-small">
+            <div class="uk-container">
+                <div uk-grid>
+                    <div>
+                        <img data-src={{ user.image_path() }} width="250" height="250" alt="Profile Picture" uk-img>
+                    </div>
+                    <div>
+                        <h3>{{ user.username }} ({{user.first_name}}, {{user.last_name}})</h3>
+                        {% if user.last_seen %}<p class=uk-margin-remove>Last seen: {{ user.last_seen }}</p>{% endif %}
+                        <p class="uk-margin-remove">{{ user.followers.count() }} followers, {{ user.followed.count() }} following.</p>
+                        {% if user == current_user %}
+                        <p class="uk-margin-remove"><a href="{{ url_for('edit_account') }}">Edit your profile</a></p>
+                        {% elif not current_user.is_following(user) %}
+                        <p class="uk-margin-remove"><a href="{{ url_for('follow', username=user.username) }}">Follow</a></p>
+                        {% else %}
+                        <p class="uk-margin-remove"><a href="{{ url_for('unfollow', username=user.username) }}">Unfollow</a></p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="uk-text-lead">Your Posts</p>
+        {% if user == current_user %}
+            {% if posts %}
+            <hr></hr>
+            {% else %}
+            <hr></hr>
+            <h3 class="uk-text-center">You're quiet</h3>
+            <p class="uk-text-center uk-text-muted uk-padding-remove uk-text-medium">You can post <a href={{ url_for('main.index') }}>here</a></p>
+            {% endif %}
+        {% endif %}
+        
+        <div class="uk-section uk-section-small uk-padding-remove">
+            <div class="uk-container">
+                {% if posts %}
+                    {% for post in posts %}
+                    {% include "_post.html" %}
+                    {% endfor %}
+                    {% if next_url %}
+                        <a href="{{ next_url }}"><<</a>
+                    {% endif %}
+                    {% if prev_url %}
+                        <a href="{{ prev_url }}">>></a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
