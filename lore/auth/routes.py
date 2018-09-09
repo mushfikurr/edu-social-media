@@ -60,7 +60,7 @@ def register():
         flash('Account created successfully!', 'info')
         return redirect(url_for('auth.login'))
     return render_template(
-        'register.html',
+        'auth/register.html',
         form=register_form,
         title='Register'
     )
