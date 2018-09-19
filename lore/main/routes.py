@@ -189,7 +189,7 @@ def user(username):
         current_app.config['POSTS_PER_PAGE'],
         False
     )
-    display_fields = [{"username": user.username}, {"email": user.email}, {"first_name" user.first_name}]
+    display_fields = [{"username": user.username}, {"email": user.email}, {"first_name": user.first_name}]
     next_url = url_for('main.user', username=user.username, page=posts.next_num) \
         if posts.has_next else None
     prev_url = url_for('main.user', username=user.username, page=posts.prev_num) \
