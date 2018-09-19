@@ -11,7 +11,7 @@ class Config(object):
     """
     Config object for app config
     """
-    DEBUG = True  # False when in production
+    DEBUG = False  # False when in production
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'lore.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
