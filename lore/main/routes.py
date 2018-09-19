@@ -163,12 +163,33 @@ def user(username):
     Can see their own posts and edit their information.
     """
     user = User.query.filter_by(username=username).first_or_404()
+
+    # Update Account Form
+    form = UpdateAccountForm()
+    if form.validate_on_submit():
+        if form.picture.data:
+            print("Picture handling")
+            picture_file = resize_and_save(form.picture.data, (200, 200))
+            print(picture_file)
+            current_user.image_file = picture_file
+            print(current_user.image_file)
+        current_user.email = form.email.data
+        current_user.username = form.username.data
+        db.session.commit()
+
+        flash('Your account has been updated!', 'success')
+        return redirect(url_for('main.edit_account'))
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+    
     page = request.args.get('page', 1, type=int)
     posts = user.posts.order_by(Post.publish_date.desc()).paginate(
         page,
         current_app.config['POSTS_PER_PAGE'],
         False
     )
+    display_fields = [{"username": user.username}, {"email": user.email}, {"first_name": user.first_name}]
     next_url = url_for('main.user', username=user.username, page=posts.next_num) \
         if posts.has_next else None
     prev_url = url_for('main.user', username=user.username, page=posts.prev_num) \
@@ -176,7 +197,9 @@ def user(username):
     return render_template(
         'main/user.html',
         user=user,
+        form=form,
         posts=posts.items,
         next_url=next_url,
-        prev_url=prev_url
+        prev_url=prev_url,
+        display_fields=display_fields
     )

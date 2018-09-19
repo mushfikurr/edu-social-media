@@ -14,7 +14,7 @@ def login():
     Sessions handled by Flask-Login.
     """
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('main.index'))
 
     form = LoginForm()
     if form.validate_on_submit():
