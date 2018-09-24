@@ -31,6 +31,7 @@
                         <nav class="uk-navbar uk-light" data-uk-navbar="mode:click">
                             <div class="uk-navbar-left">
                                 <ul class="uk-navbar-nav uk-visible@m">
+                                    <li><a uk-toggle="target: #offcanvas-usage" data-uk-icon="icon: menu"></a></li>
                                     <li class="uk-active uk-margin-right"><a href={{ url_for('main.index') }}>Lore</a></li>
                                     {% if title == "Home" %}
                                     <li class="uk-active"><a href={{ url_for('main.index') }}>Home</a></li>
@@ -41,11 +42,6 @@
                                     <li class="uk-active"><a href={{ url_for('main.explore') }}>Explore</a></li>
                                     {% else %}
                                     <li><a href={{ url_for('main.explore') }}>Explore</a></li>
-                                    {% endif %}
-                                    {% if title == "Stream" %}
-                                    <li class="uk-active"><a href={{ url_for('main.index') }}>Stream</a></li>
-                                    {% else %}
-                                    <li><a href={{ url_for('main.index') }}>Stream</a></li>
                                     {% endif %}
                                 </ul>
                             </div>
@@ -59,6 +55,7 @@
                     </div>
                 </header>
             {% endif %}
+            {% include "main/offcanvas.html" %}
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
@@ -68,7 +65,9 @@
                     {% endfor %}
                 {% endif %}
             {% endwith %}
-            {% block content %}{% endblock %}
+            <div class="uk-offcanvas-content">
+                {% block content %}{% endblock %}
+            </div>
             <!-- FOOT -->
             {% if current_user.anonymous %}
             <div class="uk-position-bottom-center uk-position-small uk-dark" uk-sticky="top: ">

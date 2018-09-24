@@ -124,38 +124,7 @@ def unfollow(username):
     return redirect(url_for('main.user', username=username))
 
 
-@bp.route('/edit_account', methods=['GET', 'POST'])
-@login_required
-def edit_account():
-    """
-    Endpoint for editing account.
-    NOTE: Not complete.
-    """
-    posts = current_user.posts
-    form = UpdateAccountForm()
-    print(form.data)
-
-    if form.validate_on_submit():
-        if form.picture.data:
-            print("Picture handling")
-            picture_file = resize_and_save(form.picture.data, (200, 200))
-            print(picture_file)
-            current_user.image_file = picture_file
-            print(current_user.image_file)
-        current_user.email = form.email.data
-        current_user.username = form.username.data
-        db.session.commit()
-
-        flash('Your account has been updated!', 'success')
-        return redirect(url_for('main.edit_account'))
-    elif request.method == 'GET':
-        form.username.data = current_user.username
-        form.email.data = current_user.email
-
-    return render_template('main/edit_account.html', posts=posts, form=form)
-
-
-@bp.route('/user/<username>')
+@bp.route('/user/<username>', methods=['GET', 'POST'])
 @login_required
 def user(username):
     """
@@ -166,40 +135,40 @@ def user(username):
 
     # Update Account Form
     form = UpdateAccountForm()
+    print(form.data)
     if form.validate_on_submit():
         if form.picture.data:
-            print("Picture handling")
             picture_file = resize_and_save(form.picture.data, (200, 200))
-            print(picture_file)
             current_user.image_file = picture_file
-            print(current_user.image_file)
+   
         current_user.email = form.email.data
         current_user.username = form.username.data
+        current_user.about_me = form.about_me.data
         db.session.commit()
 
         flash('Your account has been updated!', 'success')
-        return redirect(url_for('main.edit_account'))
+        return redirect(url_for('main.user', username=current_user.username))
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email
-    
+        form.about_me.data = current_user.about_me
+
     page = request.args.get('page', 1, type=int)
     posts = user.posts.order_by(Post.publish_date.desc()).paginate(
         page,
         current_app.config['POSTS_PER_PAGE'],
         False
     )
-    display_fields = [{"username": user.username}, {"email": user.email}, {"first_name": user.first_name}]
+    
     next_url = url_for('main.user', username=user.username, page=posts.next_num) \
         if posts.has_next else None
     prev_url = url_for('main.user', username=user.username, page=posts.prev_num) \
-        if posts.has_prev else None
+        if posts.has_prev else None 
     return render_template(
         'main/user.html',
         user=user,
         form=form,
         posts=posts.items,
         next_url=next_url,
-        prev_url=prev_url,
-        display_fields=display_fields
+        prev_url=prev_url
     )

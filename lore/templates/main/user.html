@@ -8,101 +8,118 @@
 </style>
 
 
-{% macro build_fields(fields) %}
-{% for field in fields %}
-    {% for key, val in field.items() %}
-        <div class="uk-margin-small">
-            <div id="{{ key }}" class="uk-visible-toggle">
-                <div uk-grid>
-                    <div class="uk-width-expand">
-                        {% if key == "username" %}
-                            <h4>{{ val }}</h3>
-                        {% else %}
-                            <p>{{ val }}</p>
-                        {% endif %}
-                    </div>
-                    <div class="uk-width-auto">
-                        <ul class="uk-hidden-hover uk-iconnav">
-                            <li><a id="{{ key }}-icon" uk-icon="icon: pencil"></a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <script>
-            $('#{{key}}-icon').click(function(){
-                $('#{{ key }}').html('<input type="text" class="uk-input" placeholder="{{key}}"></input>');
-            })
-        </script>
-    {% endfor %}
-{% endfor %}
-{% endmacro %}
-
 {% block content %}
-    <div class="uk-container">
-        <div class="uk-section uk-section-small">
-            <div class="uk-container">
-                <div class="uk-grid uk-grid-medium uk-match-height" data-uk-grid>
-                    <div class="uk-width-auto">
-                        <img src="{{ user.get_image_path() }}">
-                    </div>
-                    <div class="uk-margin">
-                        {% if user == current_user %}
-                            {{ build_fields(display_fields) }}
-                        {% else %}
-                        <div>
-                            <h3 class="username-field">{{ user.username }}</h3>
-                            <p class="fullname-field">{{ user.first_name }}, {{ user.last_name }}</p>
-                            <a id="#edit-userfield" class="uk-icon-link" uk-icon="pencil"></a>
-                        </div>
-                        {% endif %}
-                        {% if user.last_seen %}<p class=uk-margin-remove>Last seen: {{ user.last_seen }}</p>{% endif %}
-                        <p class="uk-margin-remove">{{ user.followers.count() }} followers, {{ user.followed.count() }} following.</p>
-                        {% if user == current_user %}
-                        <p class="uk-margin-remove"><a href="{{ url_for('main.edit_account') }}">Edit your profile</a></p>
-                        {% elif not current_user.is_following(user) %}
-                        <p class="uk-margin-remove"><a href="{{ url_for('main.follow', username=user.username) }}">Follow</a></p>
-                        {% else %}
-                        <p class="uk-margin-remove"><a href="{{ url_for('main.unfollow', username=user.username) }}">Unfollow</a></p>
-                        {% endif %}
-                    </div>
+<div class="uk-container">
+    <div class="uk-section uk-section-small">
+        <div class="uk-container">
+            <div class="uk-grid uk-grid-large" data-uk-grid>
+                <div class="uk-width-auto">
+                    <img src="{{ user.get_image_path() }}">
                 </div>
-            </div>
-        </div>
-        {% if user == current_user %}
-            <p class="uk-text-lead">Your Posts</p>
-            {% if posts %}
-            <hr></hr>
-            {% else %}
-            <hr></hr>
-            <h3 class="uk-text-center">You're quiet</h3>
-            <p class="uk-text-center uk-text-muted uk-padding-remove uk-text-medium">You can post <a href={{ url_for('main.index') }}>here</a></p>
-            {% endif %}
-        {% else %}
-            <p class="uk-text-lead">{{ user.username }}'s Posts</p>
-            {% if posts %}
-            <hr></hr>
-            {% else %}
-            <hr></hr>
-            <h3 class="uk-text-center">Look's like {{ user.username }} hasn't posted.</h3>
-            <p class="uk-text-center uk-text-muted uk-padding-remove uk-text-medium">I'm sure they'll post soon!</a></p>
-            {% endif %}
-        {% endif %}
-        
-        <div class="uk-section uk-section-small uk-padding-remove">
-            <div class="uk-container">
-                {% if posts %}
-                    {% for post in posts %}
-                    {% include "main/_post.html" %}
-                    {% endfor %}
-                    {% if next_url %}
-                        <a href="{{ next_url }}"><<</a>
+                <div class="uk-margin">
+                    <div>
+                        <h3 class="uk-margin-remove-bottom">{{ user.username }}</h3>
+                        <p class="uk-margin-remove-top uk-margin-remove-bottom">{{ user.first_name }}, {{ user.last_name }}</p>
+                        {% if user.about_me %}
+                            <p class="uk-margin-remove">{{ user.about_me }}</p>
+                        {% endif %}
+                    </div>
+                    <br>
+                    {% if user.last_seen %}<p class=uk-margin-remove>Last seen: {{ user.last_seen }}</p>{% endif %}
+                    <p class="uk-margin-remove">{{ user.followers.count() }} followers, {{ user.followed.count() }} following.</p>
+                    {% if user == current_user %}
+                    <a uk-toggle="target: #edit-info; animation: uk-animation-slide-top">Edit</a>
+                    <div id="edit-info" class="uk-margin" hidden>
+                        <fieldset class="uk-fieldset">
+                                <form method="POST" action="" enctype="multipart/form-data">
+                                    {{ form.hidden_tag() }}
+                                    <div class="uk-height-match" uk-grid>
+                                        <div>
+                                            <div class="uk-margin">
+                                                {{ form.username.label( **{'class': 'uk-form-label'} ) }}
+                                                {{ form.username( **{'class': 'uk-input', 'data-validation': 'length', 'data-validation-length': '3-16'} ) }}
+                                            </div>
+                                            <div class="uk-margin">
+                                                {{ form.email.label( **{'class': 'uk-form-label'} ) }}
+                                                {{ form.email( **{'class': 'uk-input', 'data-validation': 'email'} ) }}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="uk-margin">
+                                                {{ form.about_me.label( **{'class': 'uk-form-label', 'rows': '5'} ) }}
+                                                {{ form.about_me( **{'class': 'uk-input', 'data-validation': 'length', 'data-validation-length': '2-120'} ) }}
+                                            </div>
+                                            <div class="uk-margin">
+                                                {{ form.picture.label( **{'class': 'uk-form-label'} ) }}
+                                                <div class="js-upload" uk-form-custom>
+                                                    {{ form.picture(
+                                                        **{
+                                                            'data-validation': 'mime size',
+                                                            'data-validation-allowing': 'jpg, png, gif',
+                                                            'data-validation-max-size': '2M'
+                                                        }
+                                                    ) }}
+                                                    <button class="uk-button uk-button-default" type="button">Select</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="uk-margin">
+                                        {{ form.submit( **{'class': 'uk-button uk-button-primary'} ) }}
+                                    </div>
+                                    <script>
+                                        $.validate({    
+                                            lang: 'en',
+                                            errorElementClass: 'uk-form-danger',
+                                            errorMessageClass: 'uk-text-danger'
+                                        });
+                                    </script>
+                                </form>
+                        </fieldset>
+                    </div>
+                    {% elif not current_user.is_following(user) %}
+                        <p class="uk-margin-remove"><a href="{{ url_for('main.follow', username=user.username) }}">Follow</a></p>
+                    {% else %}
+                        <p class="uk-margin-remove"><a href="{{ url_for('main.unfollow', username=user.username) }}">Unfollow</a></p>
                     {% endif %}
-                    {% if prev_url %}
-                        <a href="{{ prev_url }}">>></a>
-                    {% endif %}
-                {% endif %}
+                </div>
             </div>
         </div>
     </div>
+    {% if user == current_user %}
+        <p class="uk-text-lead">Your Posts</p>
+        {% if posts %}
+        <hr></hr>
+        {% else %}
+        <hr></hr>
+        <h3 class="uk-text-center">You're quiet</h3>
+        <p class="uk-text-center uk-text-muted uk-padding-remove uk-text-medium">You can post <a href={{ url_for('main.index') }}>here</a></p>
+        {% endif %}
+    {% else %}
+        <p class="uk-text-lead">{{ user.username }}'s Posts</p>
+        {% if posts %}
+        <hr></hr>
+        {% else %}
+        <hr></hr>
+        <h3 class="uk-text-center">Looks like {{ user.username }} hasn't posted.</h3>
+        <p class="uk-text-center uk-text-muted uk-padding-remove uk-text-medium">I'm sure they'll post soon!</a></p>
+        {% endif %}
+    {% endif %}
+    
+    <div class="uk-section uk-section-small uk-padding-remove">
+        <div class="uk-container">
+            {% if posts %}
+                {% for post in posts %}
+                {% include "main/_post.html" %}
+                {% endfor %}
+                {% if next_url %}
+                    <a href="{{ next_url }}"><<</a>
+                {% endif %}
+                {% if prev_url %}
+                    <a href="{{ prev_url }}">>></a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}

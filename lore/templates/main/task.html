@@ -1,0 +1,83 @@
+<script>
+    function refreshTaskList() {
+        $.ajax({
+            type: 'get',
+            url: "{{ url_for('api.get_all_tasks') }}",
+            dataType: 'JSON',
+        })
+        .done(function(data) {
+            var tasks = data.tasks;
+            $('#task-list').empty();
+            $.each(tasks, function(index, object){ 
+                var $taskitem = $("<li><a>" + object.title + "</a></li>");
+                $('#task-list').append($taskitem);
+                $taskitem.click(function() {
+                    var dialog_html = 
+                        '<div class="uk-modal-header"><div class="uk-modal-title"' + object.title + '</div></div>' +
+                        '<div class="uk-modal-body">' + object.description + '</div>';
+                    UIkit.modal.confirm(dialog_html);
+                })
+            })
+        })
+    }
+
+    $(document).ready(function(){
+        refreshTaskList();
+        $('#add-task').on('submit', function(event) {
+            var csrf_token = "{{ csrf_token() }}";
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if(!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                    }
+                }
+            });
+            $.ajax({
+                data : {
+                    task_title : $('#form-title').val(),
+                    task_description : $('#form-description').val()
+                },
+                type : 'POST',
+                url : '{{ url_for("api.add_task") }}'
+            })
+            .done(function(data){
+                UIkit.notification(data.response);
+                $('#form-title').val("");
+                $('#form-description').val("");
+                refreshTaskList();
+            })
+            .fail(function(exception){
+                UIkit.notification(data.response);
+            })
+            event.preventDefault();
+        })
+    })
+</script>
+<div id="add-task" uk-modal>
+    <div class="uk-modal-dialog">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header">
+            <h2 class="uk-modal-title">Add a task</h2>
+        </div>
+        <div class="uk-modal-body">
+            <form id="form-add-task">
+                <div class="uk-margin">
+                    <fieldset class="uk-fieldset">
+                        <div class="uk-margin">
+                            <div class="uk-form-label">Task title</div>
+                            <input id="form-title" class="uk-input" type="text" placeholder="Title">
+                        </div>
+                        <div class="uk-margin">
+                            <div class="uk-form-label">Task description</div>
+                            <textarea id="form-description" class="uk-textarea" rows="5" placeholder="Description"></textarea>
+                        </div>
+                    </fieldset>
+                </div>
+            </form>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+            <button class="uk-button uk-button-primary" type="submit" form="form-add-task">Add</button>
+        </div>
+    </div>
+</div>

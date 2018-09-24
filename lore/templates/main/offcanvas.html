@@ -1,0 +1,17 @@
+<div id="offcanvas-usage" uk-offcanvas>
+    <div class="uk-offcanvas-bar uk-flex uk-flex-column">
+        <button class="uk-offcanvas-close" type="button" uk-close></button>
+        <h3 class="uk-nav-center">Welcome, {{ current_user.username }}.</h3>
+        <ul class="uk-nav uk-nav-primary uk-nav-center">
+            <hr>
+            <li class="uk-nav-header">Study Tools</li>
+            <li><a uk-toggle="target: #checklist;animation: uk-animation-slide-top-small"><span class="uk-margin-small-right" uk-icon="icon: check"></span>Checklist</a></li>
+            <div id="checklist" class="uk-margin" hidden>
+                <div class="uk-form-label">TASKS <a uk-icon="pencil" uk-toggle="target: #add-task"> Add a task</a></div>
+                {% include "main/task.html" %}
+                <div class="uk-margin" id="task-list"></div>
+            </div>
+            <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: clock"></span>Timed Study</a></li>
+        </ul>
+    </div>
+</div>

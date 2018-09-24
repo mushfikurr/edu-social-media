@@ -2,9 +2,6 @@ from lore import db, login, bcrypt
 from datetime import datetime
 from flask import url_for, current_app
 from flask_login import UserMixin
-from PIL import Image
-import secrets
-import os
 
 
 @login.user_loader
@@ -32,12 +29,13 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False,
                            default='default.png')
-    first_name = db.Column(db.String(256), nullable=False)
-    last_name = db.Column(db.String(256), nullable=False)
+    first_name = db.Column(db.String(20), nullable=False)
+    last_name = db.Column(db.String(20), nullable=False)
     password = db.Column(db.String(60))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
-    about_me = db.Column(db.String(200))
+    about_me = db.Column(db.String(120))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
+    tasks = db.relationship('Task', backref='author', lazy='dynamic' )
 
     # Users that user has followed
     followed = db.relationship(
@@ -99,25 +97,18 @@ class User(db.Model, UserMixin):
         self_posts = Post.query.filter_by(author_id=self.id)
         return followed.union(self_posts).order_by(Post.publish_date.desc())
 
+    def descending_tasks(self):
+        """
+        Returns users tasks in descending order
+        """
+        tasks = self.tasks.order_by(Task.publish_date.desc()).all()
+        return tasks
+
     def __repr__(self):
         """
         Displays how User model is printed
         """
         return f'User({self.username}, {self.email})'
-
-
-class RevokedToken(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    jti = db.Column(db.String(120), nullable=False)
-
-    def add(self):
-        db.session.add(self)
-        db.session.commit()
-
-    @classmethod
-    def is_jti_blacklisted(cls, jti):
-        query = cls.query.filter_by(jti=jti).first()
-        return bool(query)
 
 
 class Post(db.Model):
@@ -136,4 +127,33 @@ class Post(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
-        return f'Post({self.title}, {self.body}, {self.publish_date})'
+        return f'Post({self.body}, {self.publish_date})'
+
+
+class Task(db.Model):
+    """
+    Task model for DB
+    Used for 'Checklist' function
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(60), nullable=False)
+    description = db.Column(db.String(128))
+    is_finished = db.Column(db.Boolean, default=False)
+    publish_date = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.utcnow
+    )
+
+    # Foreign Key
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __repr__(self):
+        return f'Checklist({self.title}, {self.description}, {self.publish_date})'
+
+    def toggle(self):
+        if self.is_finished:
+            self.is_finished = False
+        else:
+            self.is_finished = True
+        db.session.commit()

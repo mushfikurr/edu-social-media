@@ -3,13 +3,13 @@ from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from flask_wtf.csrf import CSRFProtect
 from lore.config import Config
-from flask_jwt_extended import JWTManager
 
 db = SQLAlchemy()
 migrate = Migrate()
-jwt = JWTManager()
 bcrypt = Bcrypt()
+csrf = CSRFProtect()
 
 # Login Configuration
 login = LoginManager()
@@ -35,13 +35,15 @@ def create_app(config_class=Config):
 
     # Database
     db.init_app(app)
-    migrate.init_app(app)
-    jwt.init_app(app)
+    migrate.init_app(app, db)
 
     # Bcrypt
     bcrypt.init_app(app)
 
     # Login Manager
     login.init_app(app)
+
+    # CSRF Protection
+    csrf.init_app(app)
 
     return app

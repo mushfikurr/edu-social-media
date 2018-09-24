@@ -19,8 +19,12 @@ class UpdateAccountForm(FlaskForm):
         validators=[DataRequired(), Length(min=3, max=16)]
     )
     picture = FileField(
-        'Update profile picture',
+        'Upload Picture',
         validators=[FileAllowed(['jpg', 'png'])]
+    )
+    about_me = TextAreaField(
+        'About Me',
+        validators=[Length(max=120)]
     )
     email = StringField(
         'Email',
@@ -65,3 +69,17 @@ class PostForm(FlaskForm):
         validators=[DataRequired(), Length(min=1, max=140)]
     )
     submit = SubmitField('Submit')
+
+
+class TaskForm(FlaskForm):
+    """
+    Form used to create a new task on a checklist.
+    """
+    task_title = StringField(
+        'Title',
+        validators=[DataRequired(), Length(1, 60)]
+    )
+    task_description = StringField(
+        'Description',
+        validators=[DataRequired(), Length(1, 128)]
+    )
