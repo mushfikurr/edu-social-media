@@ -5,8 +5,9 @@ from lore import db
 from lore.main.avatar import resize_and_save
 from lore.main import bp
 from lore.main.forms import PostForm, UpdateAccountForm
-from lore.main.models import User, Post
+from lore.main.models import User, Post, Message
 from datetime import datetime
+
 
 @bp.before_request
 def before_request():
@@ -140,7 +141,7 @@ def user(username):
         if form.picture.data:
             picture_file = resize_and_save(form.picture.data, (200, 200))
             current_user.image_file = picture_file
-   
+
         current_user.email = form.email.data
         current_user.username = form.username.data
         current_user.about_me = form.about_me.data
@@ -163,7 +164,7 @@ def user(username):
     next_url = url_for('main.user', username=user.username, page=posts.next_num) \
         if posts.has_next else None
     prev_url = url_for('main.user', username=user.username, page=posts.prev_num) \
-        if posts.has_prev else None 
+        if posts.has_prev else None
     return render_template(
         'main/user.html',
         user=user,
@@ -171,4 +172,29 @@ def user(username):
         posts=posts.items,
         next_url=next_url,
         prev_url=prev_url
+    )
+
+
+@bp.route('/inbox')
+def inbox():
+    """
+    Inbox for the user
+    """
+    current_user.last_msg_read_time = datetime.utcnow()
+    db.session.commit()
+
+    page = request.args.get('page', 1, type=int)
+    messages = current_user.messages_recieved.order_by(
+        Message.timestamp.desc()).paginate(
+            page, current_app.config['POSTS_PER_PAGE'], False)
+    next_url = url_for('main.messages', page=messages.next_num) \
+        if messages.has_next else None
+    prev_url = url_for('main.messages', page=messages.prev_num) \
+        if messages.has_prev else None
+    return render_template(
+        'main/inbox.html',
+        messages=messages.items,
+        next_url=next_url,
+        prev_url=prev_url,
+        title="Inbox"
     )

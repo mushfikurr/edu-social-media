@@ -1,0 +1,14 @@
+{% extends "main/layout.html" %}
+{% block content %}
+<div class="uk-container">
+    <div class="uk-section uk-section-small">
+        <h2 class="uk-margin-remove-bottom">Inbox.</h2>
+        <span class="uk-text-muted uk-margin-remove-top">Speak in private. Psst!</span>
+        <hr>
+        <h3 class="uk-text-medium">Recieved</h3>
+        {% for message in messages %}
+            {% include "main/_message.html" %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

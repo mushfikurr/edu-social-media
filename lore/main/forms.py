@@ -71,6 +71,17 @@ class PostForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
+class MessageForm(FlaskForm):
+    """
+    Form used to send a private message to a user.
+    """
+    message = TextAreaField(
+        'Start a conversation',
+        validators=[DataRequired(), Length(min=1, max=140)]
+    )
+    submit = SubmitField('Send')
+
+
 class TaskForm(FlaskForm):
     """
     Form used to create a new task on a checklist.

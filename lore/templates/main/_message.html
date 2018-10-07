@@ -1,0 +1,29 @@
+<article class="uk-comment uk-comment-primary">
+    <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
+        <div class="uk-width-auto">
+            <img class="uk-comment-avatar" src="{{ url_for('static', filename='profile-pictures/default_8080.png') }}" width="80" height="80"/>
+        </div>
+        <div class="uk-width-expand">
+            <h4 class="uk-comment-title uk-margin-remove">
+                <a class="uk-link-reset" href="{{ url_for('main.user', username=message.author.username) }}">{{ message.author.username }}</a>
+            </h4>
+            <ul class="uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top">
+                <li>{{ moment(message.timestamp).fromNow() }}</li>
+                <li>
+                    <a uk-toggle="target: #send-message">Reply</a>
+                    {% with user=message.author %}
+                        {% include "main/_message_dialog.html" %}
+                    {% endwith %}
+                </li>
+                <li>
+                    <a>Delete</a>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <div class="uk-comment-body">
+        <p>{{ message.body }}</p>
+    </div>
+</article>
+<br />
+    

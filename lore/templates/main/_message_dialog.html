@@ -1,0 +1,58 @@
+<script>
+    function sendMessage() {
+        var csrf_token = "{{ csrf_token() }}"
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if(!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                }
+            }
+        });
+        $.ajax({
+            data: {
+                user: "{{ user.username }}",
+                message: $('#form-message-body').val()
+            },
+            type: 'POST',
+            url: '{{ url_for("api.send_message") }}'
+        })
+        .done(function(data){
+            UIkit.notification(data.response);
+            $('#form-message-body').val("");
+        })
+        .fail(function(exception){
+            UIkit.notification(data.response);
+        })
+    }
+    $(document).ready(function() {
+        $('#form-send-message').on('submit', function(event) {
+            sendMessage();
+            event.preventDefault();
+        })
+    })
+</script>
+
+<div id="send-message" uk-modal>
+    <div class="uk-modal-dialog">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header">
+            <h2 class="uk-modal-title">Send a message</h2>
+        </div>
+        <div class="uk-modal-body">
+            <form id="form-send-message">
+                <div class="uk-margin">
+                    <fieldset class="uk-fieldset">
+                        <div class="uk-margin">
+                            <div class="uk-form-label">Say something nice:</div>
+                            <textarea id="form-message-body" class="uk-textarea" rows="5" placeholder="Start a conversation.."></textarea>
+                        </div>
+                    </fieldset>
+                </div>
+            </form>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+            <button class="uk-button uk-button-primary" type="submit" form="form-send-message">Add</button>
+        </div>
+    </div>
+</div>

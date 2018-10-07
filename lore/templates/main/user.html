@@ -18,17 +18,27 @@
                 </div>
                 <div class="uk-margin">
                     <div>
-                        <h3 class="uk-margin-remove-bottom">{{ user.username }}</h3>
-                        <p class="uk-margin-remove-top uk-margin-remove-bottom">{{ user.first_name }}, {{ user.last_name }}</p>
+                        <h3 class="uk-margin-remove-bottom">{{ user.username }}  
+                        {% if user != current_user %}
+                            {% if current_user.is_following(user) %}
+                                <span class="uk-text-small uk-margin-remove"><a class="uk-text-baseline" href="{{ url_for('main.unfollow', username=user.username) }}">Unfollow</a></span>
+                            {% else %}
+                                <span class="uk-text-small uk-margin-remove"><a class="uk-text-baseline" href="{{ url_for('main.follow', username=user.username) }}">Follow</a></span>
+                            {% endif %}
+                        {% endif %}
+                        </h3>
+                        <p class="uk-margin-remove-top uk-margin-remove-bottom">{{ user.first_name }} {{ user.last_name }}</p>
                         {% if user.about_me %}
                             <p class="uk-margin-remove">{{ user.about_me }}</p>
                         {% endif %}
                     </div>
                     <br>
-                    {% if user.last_seen %}<p class=uk-margin-remove>Last seen: {{ user.last_seen }}</p>{% endif %}
+                    {% if user.last_seen %}<p class="uk-margin-remove">Last seen {{ moment(user.last_seen).fromNow() }}</p>{% endif %}
                     <p class="uk-margin-remove">{{ user.followers.count() }} followers, {{ user.followed.count() }} following.</p>
                     {% if user == current_user %}
-                    <a uk-toggle="target: #edit-info; animation: uk-animation-slide-top">Edit</a>
+                    <ul class="uk-subnav" uk-margin>
+                        <li><a uk-toggle="target: #edit-info; animation: uk-animation-slide-top-small">Edit</a></li>
+                    </ul>
                     <div id="edit-info" class="uk-margin" hidden>
                         <fieldset class="uk-fieldset">
                                 <form method="POST" action="" enctype="multipart/form-data">
@@ -77,10 +87,11 @@
                                 </form>
                         </fieldset>
                     </div>
-                    {% elif not current_user.is_following(user) %}
-                        <p class="uk-margin-remove"><a href="{{ url_for('main.follow', username=user.username) }}">Follow</a></p>
-                    {% else %}
-                        <p class="uk-margin-remove"><a href="{{ url_for('main.unfollow', username=user.username) }}">Unfollow</a></p>
+                    {% endif %}
+                    {% if user != current_user %}
+                        <br>
+                        <button class="uk-button uk-button-medium" uk-toggle="target: #send-message">Send a message</button>
+                        {% include "main/_message_dialog.html" %}
                     {% endif %}
                 </div>
             </div>
