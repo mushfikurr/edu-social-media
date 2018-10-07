@@ -2,23 +2,7 @@
 {% block content %}
     <div class="uk-container">
         <div class="uk-section uk-section-small">
-            <div class="uk-container">
-                <form action="" method="post">
-                    {% if form %}
-                    {{ form.hidden_tag() }}
-                        <div class="uk-margin">
-                            {{ form.body(**{'class': 'uk-input uk-width uk-width-1-1', 'rows': '5', 'placeholder': 'Say something..'}) }}<br>
-                            {% for error in form.body.errors %}
-                            <span style="color: red;">{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                        <div class="uk-margin">
-                            {{ form.submit(**{'class': 'uk-button uk-button-primary uk-button-medium uk-margin'}) }}
-                        </div>
-                    {% endif %}
-                </form>
-            </div>
-                <h3 class="uk-margin-remove-bottom">Explore.</h3>
+                <h2 class="uk-margin-remove-bottom">Explore.</h2>
                 <span class="uk-text-muted uk-margin-remove-top uk-text-small">What are the students on about?</span>
                 <hr>
                 {% for post in posts %}
