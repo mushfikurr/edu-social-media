@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_moment import Moment
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -10,6 +11,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 bcrypt = Bcrypt()
 csrf = CSRFProtect()
+moment = Moment()
 
 # Login Configuration
 login = LoginManager()
@@ -45,5 +47,8 @@ def create_app(config_class=Config):
 
     # CSRF Protection
     csrf.init_app(app)
+
+    # Moments
+    moment.init_app(app)
 
     return app

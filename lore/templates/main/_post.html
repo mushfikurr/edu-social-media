@@ -1,4 +1,4 @@
 <dl class="uk-description-list uk-description-list-divider">
-    <dt><a href={{ url_for('main.user', username=post.author.username) }}>{{ post.author.username }}</a></dt>
+    <dt><a href={{ url_for('main.user', username=post.author.username) }}>{{ post.author.username }}</a> <span class="uk-text-lowercase">said {{ moment(post.publish_date).fromNow() }}:</span></dt>
     <dd>{{ post.body }}</dd>
 </dl>
