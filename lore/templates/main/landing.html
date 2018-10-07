@@ -10,23 +10,8 @@
             <title>Lore</title>
         {% endif %}
 		<link rel="icon" href="img/favicon.ico">
-		<!-- CSS FILES -->
 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/css/uikit.min.css">
-
-        <style>
-			.wrap::before {
-				position: absolute;
-				height: 100vh;
-				width: 100vw;
-				content: '';
-				z-index: 1;
-				background-color: rgba(0,0,0,0.7);
-			}
-			.lead {
-				font-size: 1.175em;
-				font-weight: 300;
-            }        
-		</style>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/landing.css') }}">
     </head>
     
 	<body class="uk-light wrap uk-background-norepeat uk-background-cover uk-background-center uk-background-secondary" style="background-image: url( {{ url_for('static', filename='img/adult-cafe-null.jpg') }} )">

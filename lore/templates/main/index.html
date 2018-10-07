@@ -8,9 +8,6 @@
                     {{ form.hidden_tag() }}
                         <div class="uk-margin">
                             {{ form.body(**{'class': 'uk-input uk-width uk-width-1-1', 'rows': '5', 'placeholder': 'Say something..'}) }}<br>
-                            {% for error in form.body.errors %}
-                            <span style="color: red;">{{ error }}</span>
-                            {% endfor %}
                         </div>
                         <div class="uk-margin">
                             {{ form.submit(**{'class': 'uk-button uk-button-primary uk-button-medium uk-margin'}) }}
