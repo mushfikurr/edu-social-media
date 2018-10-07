@@ -37,11 +37,15 @@
                 {% for post in posts %}
                     {% include "main/_post.html" %}
                 {% endfor %}
-                {% if next_url %}
-                    <a href="{{ next_url }}"><<</a>
-                {% endif %}
-                {% if prev_url %}
-                    <a href="{{ prev_url }}">>></a>
+                {% if next_url or prev_url %}
+                <ul class="uk-pagination">
+                    {% if next_url %}
+                        <li class="uk-margin-auto-left"><a href="{{ next_url }}">Next <span class="uk-margin-small-left" uk-pagination-next></span></a></li>
+                    {% endif %}
+                    {% if prev_url %}
+                        <li><a href="{{ prev_url }}"><span class="uk-margin-small-right" uk-pagination-previous></span> Previous</a></li>
+                    {% endif %}
+                </ul>
                 {% endif %}
             </div> 
         </div>

@@ -8,17 +8,51 @@
         .done(function(data) {
             var tasks = data.tasks;
             $('#task-list').empty();
-            $.each(tasks, function(index, object){ 
-                var $taskitem = $("<li><a>" + object.title + "</a></li>");
-                $('#task-list').append($taskitem);
-                $taskitem.click(function() {
-                    var dialog_html = 
-                        '<div class="uk-modal-header"><div class="uk-modal-title"' + object.title + '</div></div>' +
-                        '<div class="uk-modal-body">' + object.description + '</div>';
-                    UIkit.modal.confirm(dialog_html);
+            $.each(tasks, function(index, object) {
+                var $taskcomplete = $('<a class="uk-margin-small" uk-icon="check"></a>')
+                var $taskitem = $('\
+                <li>\
+                    <a class="uk-accordion-title uk-text-small uk-text-uppercase uk-text-truncate">' + object.title + '</a>\
+                    <div class="uk-accordion-content">\
+                        <p class="uk-margin-small">' + object.description + '</p>\
+                    </div>\
+                </li>\
+                ') 
+                $taskitem.append($taskcomplete);
+                $taskcomplete.on('click', function(event) {
+                    removeTask(object.id);
+                    refreshTaskList();
                 })
+                $('#task-list').append($taskitem);
             })
         })
+    }
+
+    function removeTask(taskID) {
+        var csrf_token = "{{ csrf_token() }}";
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if(!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                }
+            }
+        });
+        $.ajax({
+            type: 'delete',
+            contentType: 'application/json',
+            url: "{{ url_for('api.delete_task') }}",
+            data: JSON.stringify({id: taskID}),
+            dataType: 'JSON',
+        })
+        .done(function(data) {
+            UIkit.notification(data.response);
+            refreshTaskList();
+        })
+        .fail(function(exception) {
+            UIkit.notification(exception.response);
+            console.log(exception.response);
+        })
+        
     }
 
     $(document).ready(function(){
