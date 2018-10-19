@@ -22,7 +22,16 @@ def resize_and_save(input_picture, new_res):
             current_app.root_path, 'static/profile-pictures', picture_fn)
 
     i = Image.open(input_picture)
-    i.thumbnail(new_res)
+    if i.size[0] == 200 and i.size[1] == 200:
+        return picture_fn
+    if i.size[0] == 80 and i.size[1] == 80:
+        return picture_fn
+    scaled_res = (new_res[0]*2, new_res[1]*2)
+    i.thumbnail(scaled_res)
+    w, h = i.size[0], i.size[1]
+    print(w, h)
+    i = i.crop((w//2 - new_res[0]//2, h//2 - new_res[1]//2, w//2 + new_res[0]//2, h//2 + new_res[1]//2))
+    print(i.size)
     i.save(picture_path)
 
     return picture_fn
@@ -30,10 +39,29 @@ def resize_and_save(input_picture, new_res):
 
 def clean_avatar(user):
     if user.image_file != "default.png":
-        print(current_app.root_path + '/static/profile-pictures/' + user.image_file)
-        image_path = current_app.root_path + '/static/profile-pictures/' + user.image_file
-        remove(image_path)
+        image_path = path.join(
+            current_app.root_path,
+            'static/profile-pictures',
+            user.image_file
+        )
+        print(current_app.root_path)
+        print(image_path)
+        print(path.exists(image_path))
+        if path.exists(image_path):
+            print(f"REMOVING: {image_path}")
+            remove(image_path)
+            user.image_file = "default.png"
+        else:
+            user.image_file = "default.png"
     if user.small_image_file != "default_8080.png":
-        print(current_app.root_path + '/static/profile-pictures/' + user.small_image_file)
-        image_path = current_app.root_path + '/static/profile-pictures/8080/' + user.small_image_file
-        remove(image_path)
+        small_image_path = path.join(
+            current_app.root_path,
+            'static/profile-pictures/8080',
+            user.small_image_file
+        )
+        if path.exists(small_image_path):
+            print(f"REMOVING: {small_image_path}")
+            remove(small_image_path)
+            user.small_image_file = "default_8080.png"
+        else:
+            user.small_image_file = "default_8080.png"
