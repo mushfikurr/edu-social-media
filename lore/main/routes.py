@@ -146,7 +146,7 @@ def user(username):
             print(current_user.small_image_file)
             picture_file = resize_and_save(form.picture.data, (200, 200))
             small_picture_file = resize_and_save(form.picture.data, (80, 80))
-            
+
             print("Setting image files..")
             current_user.image_file = picture_file
             print(current_user.image_file)
