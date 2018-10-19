@@ -10,7 +10,7 @@
         });
         $.ajax({
             data: {
-                user: "{{ user.username }}",
+                id: "{{ user.id }}",
                 message: $('#form-message-body').val()
             },
             type: 'POST',
@@ -21,7 +21,7 @@
             $('#form-message-body').val("");
         })
         .fail(function(exception){
-            UIkit.notification(data.response);
+            UIkit.notification(exception.response);
         })
     }
     $(document).ready(function() {

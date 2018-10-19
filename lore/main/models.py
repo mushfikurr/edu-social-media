@@ -29,6 +29,8 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False,
                            default='default.png')
+    small_image_file = db.Column(db.String(20), nullable=False,
+                           default='default_8080.png')
     first_name = db.Column(db.String(20), nullable=False)
     last_name = db.Column(db.String(20), nullable=False)
     password = db.Column(db.String(60))
@@ -64,6 +66,10 @@ class User(db.Model, UserMixin):
         Hashes password and stores it.
         """
         self.password = bcrypt.generate_password_hash(original).decode('utf-8')
+    
+    def get_small_image_path(self):
+        return url_for(
+            'static', filename='profile-pictures/8080/' + self.small_image_file)
 
     def get_image_path(self):
         return url_for(

@@ -1,7 +1,7 @@
 <article class="uk-comment uk-comment-primary">
     <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
         <div class="uk-width-auto">
-            <img class="uk-comment-avatar" src="{{ url_for('static', filename='profile-pictures/default_8080.png') }}" width="80" height="80"/>
+            <img class="uk-comment-avatar" src="{{ message.author.get_small_image_path() }}" width="80" height="80"/>
         </div>
         <div class="uk-width-expand">
             <h4 class="uk-comment-title uk-margin-remove">

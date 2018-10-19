@@ -5,6 +5,7 @@ from flask_login import current_user, login_required
 from lore import db
 from lore.main.forms import TaskForm, MessageForm
 from lore.main.models import Task, User, Message
+from lore.main.avatar import resize_and_save
 
 from lore.api import bp
 
@@ -53,8 +54,8 @@ def send_message():
     print(request.form)
 
     if form.validate_on_submit():
-        username = request.form['user']
-        user = User.query.filter_by(username=username).first_or_404()
+        id = request.form['id']
+        user = User.query.filter_by(id=id).first_or_404()
         msg = Message(author=current_user, recipient=user,
                       body=form.message.data)
         db.session.add(msg)

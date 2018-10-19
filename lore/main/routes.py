@@ -6,6 +6,7 @@ from lore.main.avatar import resize_and_save
 from lore.main import bp
 from lore.main.forms import PostForm, UpdateAccountForm
 from lore.main.models import User, Post, Message
+from lore.main.avatar import clean_avatar
 from datetime import datetime
 
 
@@ -139,8 +140,18 @@ def user(username):
     print(form.data)
     if form.validate_on_submit():
         if form.picture.data:
+            print("Cleaning avatar..")
+            clean_avatar(current_user)
+            print(current_user.image_file)
+            print(current_user.small_image_file)
             picture_file = resize_and_save(form.picture.data, (200, 200))
+            small_picture_file = resize_and_save(form.picture.data, (80, 80))
+            
+            print("Setting image files..")
             current_user.image_file = picture_file
+            print(current_user.image_file)
+            current_user.small_image_file = small_picture_file
+            print(current_user.small_image_file)
 
         current_user.email = form.email.data
         current_user.username = form.username.data
@@ -160,7 +171,7 @@ def user(username):
         current_app.config['POSTS_PER_PAGE'],
         False
     )
-    
+
     next_url = url_for('main.user', username=user.username, page=posts.next_num) \
         if posts.has_next else None
     prev_url = url_for('main.user', username=user.username, page=posts.prev_num) \
@@ -179,6 +190,7 @@ def user(username):
 def inbox():
     """
     Inbox for the user
+    Uses @message model.
     """
     current_user.last_msg_read_time = datetime.utcnow()
     db.session.commit()
