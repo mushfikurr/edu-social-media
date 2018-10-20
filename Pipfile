@@ -14,6 +14,7 @@ python-dotenv = "*"
 Flask-JWT-Extended = "*"
 Pillow = "*"
 flask-moment = "*"
+flask-whooshalchemy = "*"
 
 [dev-packages]
 pylint = "*"
