@@ -1,13 +1,13 @@
 {% extends "main/layout.html" %}
 {% block content %}
-    <div class="uk-container">
-        <div class="uk-section uk-section-small">
+    <div class="uk-container uk-background-default" uk-height-viewport="expand: true">
+        <div class="uk-section uk-section-small uk-padding uk-padding-medium">
             <div class="uk-container">
                 <form action="" method="post">
                     {% if form %}
                     {{ form.hidden_tag() }}
                         <div class="uk-margin">
-                            {{ form.body(**{'class': 'uk-input uk-width uk-width-1-1', 'rows': '5', 'placeholder': 'Say something..'}) }}<br>
+                            {{ form.body(**{'class': 'uk-textarea uk-width uk-width-1-1', 'rows': '3', 'placeholder': 'Say something..'}) }}<br>
                         </div>
                         <div class="uk-margin">
                             {{ form.submit(**{'class': 'uk-button uk-button-primary uk-button-medium uk-margin'}) }}
@@ -16,20 +16,15 @@
                 </form>
             </div>
             <div class="uk-container">
-                {% if form %}
-                    {% if posts %}
-                    <h3>See what the people you follow are talking about.</h3>
-                    {% if current_user.followed.count() == 0 %}
-                        <p class="uk-text-small uk-text-muted">Psst. You can find people <a href={{ url_for('main.explore') }}>here</a>!</p>
-                    {% endif %}
-                    <hr>
-                    {% else %}
-                    <h3 class="uk-text-center uk-">Woah, your timeline is empty!</h3>
-                    <p class=" uk-text-center uk-text-medium uk-text-muted">Let's make some <a href={{ url_for('main.explore') }}>friends</a></p>
-                    {% endif %}
+                {% if posts %}
+                <h3>See what the people you follow are talking about.</h3>
+                {% if current_user.followed.count() == 0 %}
+                    <p class="uk-text-small uk-text-muted">Psst. You can find people <a href={{ url_for('main.explore') }}>here</a>!</p>
+                {% endif %}
+                <hr>
                 {% else %}
-                    <h3>Explore what other people are talking about.</h3>
-                    <hr>
+                <h3 class="uk-text-center uk-">Woah, your timeline is empty!</h3>
+                <p class=" uk-text-center uk-text-medium uk-text-muted">Let's make some <a href={{ url_for('main.explore') }}>friends</a></p>
                 {% endif %}
                 {% for post in posts %}
                     {% include "main/_post.html" %}

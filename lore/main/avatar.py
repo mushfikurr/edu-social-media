@@ -13,11 +13,9 @@ def resize_and_save(input_picture, new_res):
     _, f_ext = path.splitext(input_picture.filename)
     picture_fn = random_hex + f_ext
     if new_res == (80, 80):
-        print("Created avatar")
         picture_path = path.join(
             current_app.root_path, 'static/profile-pictures/8080', picture_fn)
     else:
-        print("Created profile picture")
         picture_path = path.join(
             current_app.root_path, 'static/profile-pictures', picture_fn)
 
@@ -44,11 +42,7 @@ def clean_avatar(user):
             'static/profile-pictures',
             user.image_file
         )
-        print(current_app.root_path)
-        print(image_path)
-        print(path.exists(image_path))
         if path.exists(image_path):
-            print(f"REMOVING: {image_path}")
             remove(image_path)
             user.image_file = "default.png"
         else:
@@ -60,7 +54,6 @@ def clean_avatar(user):
             user.small_image_file
         )
         if path.exists(small_image_path):
-            print(f"REMOVING: {small_image_path}")
             remove(small_image_path)
             user.small_image_file = "default_8080.png"
         else:
