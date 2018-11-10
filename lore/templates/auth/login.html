@@ -1,3 +1,8 @@
+<!--
+    The authentication pages do not extend "layout" as they are considerably different.
+    This page also uses @jquery-form-validator for it's realtime form validation.
+-->
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -5,19 +10,24 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.11/css/uikit.min.css"/>
+
+        <!-- CDN Dependencies -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.11/js/uikit.min.js" 
         integrity="sha256-uIoU015jY2XsmbFtIjpet+eU+0GM/Y+zaGlNngZTKuw=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.11/js/uikit-icons.min.js" 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.11/js/uikit-icons.min.js" 
         integrity="sha256-92V223qt9YYY7xHag8ctb7dvCKnK5sv/psCFHnAtZoU=" crossorigin="anonymous"></script>
+        <!-- /CDN Dependencies -->
+
     </head>
+
     <body>
+
+        <!-- Login Dialog -->
         <div class="uk-flex uk-flex-center uk-flex-middle uk-background-muted uk-height-viewport">
-			<div class="uk-position-bottom-center uk-position-small uk-visible@m">
-				<span class="uk-text-small uk-text-muted">Created by <a>@mushydev</a>.</span>
-			</div>
 			<div class="uk-width-medium uk-padding-small">
+                <!-- Flash Messages -->
                 {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                         {% for category, message in messages %}
@@ -27,6 +37,9 @@
                         {% endfor %}
                     {% endif %}
                 {% endwith %}
+                <!-- /Flash Messages -->
+
+                <!-- Login Form -->
 				<form method="POST" action="">
                     {{ form.hidden_tag() }}
 					<fieldset class="uk-fieldset">
@@ -77,14 +90,16 @@
                             ) }}
 						</div>
 					</fieldset>
-				</form>
+                </form>
+                <!-- /Login Form -->
+                
+                <!-- Forgot Password -->
 				<div>
 					<div class="uk-text-center">
 						<a class="uk-link-reset uk-text-small" uk-toggle="target: #recover;animation: uk-animation-slide-top-small">Forgot your password?</a>
 					</div>
 					<div class="uk-margin-small-top" id="recover" hidden>
 						<form action="login.html">
-							
 							<div class="uk-margin-small">
 								<div class="uk-inline uk-width-1-1">
 									<span class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: mail"></span>
@@ -94,8 +109,9 @@
 							<div class="uk-margin-small">
 								<button type="submit" class="uk-button uk-button-primary uk-button-primary uk-width-1-1">SEND PASSWORD</button>
 							</div>
-							
                         </form>
+
+                        <!-- Form Validation -->
                         <script>
                                 $.validate({    
                                   lang: 'en',
@@ -103,9 +119,20 @@
                                   errorMessageClass: 'uk-text-danger'
                                 });
                         </script>
+                        <!-- /Form Validation -->
+
 					</div>
-				</div>
-			</div>
+                </div>
+                <!-- /Forgot Password -->
+
+            </div>
+            <!-- Login DIalog -->
+
+            <!-- Footer -->
+			<div class="uk-position-bottom-center uk-position-small uk-visible@m">
+                <span class="uk-text-small uk-text-muted">Created by <a>@mushydev</a>.</span>
+            </div>
+            <!-- /Footer -->
 		</div>
     </body>
 </html>
