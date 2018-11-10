@@ -1,20 +1,29 @@
+<!-- 
+    This is the explore page, a global page where all posts can be seen.
+-->
+
 {% extends "main/layout.html" %}
+
 {% block content %}
-    <div class="uk-container uk-background-default" uk-height-viewport="expand: true">
-        <div class="uk-section uk-section-small uk-padding uk-padding-medium">
-                <h2 class="uk-margin-remove-bottom">Explore.</h2>
-                <span class="uk-text-muted uk-margin-remove-top uk-text-small">What are the students on about?</span>
-                <hr>
-                {% for post in posts %}
-                    {% include "main/_post.html" %}
-                {% endfor %}
-                {% if next_url %}
-                    <a href="{{ next_url }}"><<</a>
-                {% endif %}
-                {% if prev_url %}
-                    <a href="{{ prev_url }}">>></a>
-                {% endif %}
-            </div> 
-        </div>
-    </div>
+<div class="uk-section uk-section-small uk-padding uk-padding-medium">
+        <h2 class="uk-margin-remove-bottom">Explore.</h2>
+        <span class="uk-text-muted uk-margin-remove-top uk-text-small">What are the students on about?</span>
+        <hr>
+
+        <!-- Posts -->
+        {% for post in posts %}
+            {% include "main/_post.html" %}
+        {% endfor %}
+        <!-- /Posts -->
+
+        <!-- Pagination -->
+        {% if next_url %}
+            <a href="{{ next_url }}"><<</a>
+        {% endif %}
+        {% if prev_url %}
+            <a href="{{ prev_url }}">>></a>
+        {% endif %}
+        <!-- /Pagination -->
+    </div> 
+</div>
 {% endblock content %}

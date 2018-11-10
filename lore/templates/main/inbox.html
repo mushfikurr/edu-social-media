@@ -1,14 +1,22 @@
+<!--
+    This is the inbox page.
+    Uses the "_message" component to display individal messages.
+-->
+
 {% extends "main/layout.html" %}
+
 {% block content %}
-<div class="uk-container uk-background-default" uk-height-viewport="expand: true">
-    <div class="uk-section uk-section-small uk-padding uk-padding-medium">
-        <h2 class="uk-margin-remove-bottom">Inbox.</h2>
-        <span class="uk-text-muted uk-margin-remove-top">Speak in private. Psst!</span>
-        <hr>
-        <h3 class="uk-text-medium">Recieved</h3>
-        {% for message in messages %}
-            {% include "main/_message.html" %}
-        {% endfor %}
-    </div>
+<div class="uk-section uk-section-small uk-padding uk-padding-medium">
+    <h2 class="uk-margin-remove-bottom">Inbox.</h2>
+    <span class="uk-text-muted uk-margin-remove-top">Speak in private. Psst!</span>#
+    
+    <hr>
+    <h3 class="uk-text-medium">Recieved</h3>
+
+    <!-- Messages -->
+    {% for message in messages %}
+        {% include "main/_message.html" %}
+    {% endfor %}
+    <!-- /Messages -->
 </div>
 {% endblock %}

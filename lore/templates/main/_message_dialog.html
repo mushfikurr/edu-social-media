@@ -1,4 +1,12 @@
+<!-- 
+    This is "message_dialog" component.
+    It is the dialog showed when a user sends a message.
+    Can be reused using the "with" context keyword in Jinja.
+    i.e. Reply in inbox.
+ -->
+
 <script>
+    // Requests are explained in "_task"
     function sendMessage() {
         var csrf_token = "{{ csrf_token() }}"
         $.ajaxSetup({
@@ -32,27 +40,39 @@
     })
 </script>
 
+<!-- Send Message Dialog -->
 <div id="send-message" uk-modal>
     <div class="uk-modal-dialog">
         <button class="uk-modal-close-default" type="button" uk-close></button>
+
+        <!-- Title -->
         <div class="uk-modal-header">
             <h2 class="uk-modal-title">Send a message</h2>
         </div>
+        <!-- /Title -->
+
+        <!-- Body -->
         <div class="uk-modal-body">
             <form id="form-send-message">
                 <div class="uk-margin">
                     <fieldset class="uk-fieldset">
                         <div class="uk-margin">
-                            <div class="uk-form-label">Say something nice:</div>
+                            <div class="uk-form-label">Say something nice</div>
                             <textarea id="form-message-body" class="uk-textarea" rows="5" placeholder="Message"></textarea>
                         </div>
                     </fieldset>
                 </div>
             </form>
         </div>
+        <!-- /Body -->
+
+        <!-- Footer (dialog options) -->
         <div class="uk-modal-footer uk-text-right">
             <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
-            <button class="uk-button uk-button-primary" type="submit" form="form-send-message">Add</button>
+            <button class="uk-button uk-button-primary" type="submit" form="form-send-message">Send</button>
         </div>
+        <!-- /Footer -->
+
     </div>
 </div>
+<!-- /Send Message Dialog -->

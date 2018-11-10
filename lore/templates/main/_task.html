@@ -1,5 +1,12 @@
+<!-- 
+    This is the "task" component.
+    Since a lot of javascript was required, I put it in a new file.
+    + A "utils" JS file would probably be a better idea, with a function that handles requests.
+-->
+
 <script>
     function refreshTaskList() {
+        // Refreshes the task list, loading in new tasks.
         $.ajax({
             type: 'get',
             url: "{{ url_for('api.get_all_tasks') }}",
@@ -29,6 +36,7 @@
     }
 
     function removeTask(taskID) {
+        // Removes the task from the DB.
         $.ajax({
             type: 'delete',
             contentType: 'application/json',
@@ -48,6 +56,8 @@
     }
 
     $(document).ready(function(){
+        // Sets up CSRF Token so we can communicate with server using forms.
+        // We need Jinja to pass through the CSRF Token so we can send a valid form - which WTForm verifies.
         var csrf_token = "{{ csrf_token() }}";
         $.ajaxSetup({
             beforeSend: function(xhr, settings) {
@@ -56,8 +66,14 @@
                 }
             }
         });
+
         refreshTaskList();
+
+        // Listen for user input (when pressing submit) and sending the requests to the database.
         $('#add-task').on('submit', function(event) {
+            // This is the actual sending of the form to the server.
+            // We specify the data (this will be in the header) from the inputs.
+            // We also state the type of request, 'POST'.
             $.ajax({
                 data : {
                     task_title : $('#form-title').val(),
@@ -66,27 +82,33 @@
                 type : 'POST',
                 url : '{{ url_for("api.add_task") }}'
             })
+            // When we recieve a success HTTP response code (200 OK)
             .done(function(data){
                 UIkit.notification(data.response);
                 $('#form-title').val("");
                 $('#form-description').val("");
                 refreshTaskList();
             })
+            // When we recieve a failure HTTP response code
             .fail(function(exception){
                 UIkit.notification(data.response);
             })
-            event.preventDefault();
+            event.preventDefault();  // We have to restrict the default behaviour of the form, and send our own request.
         })
     })
 </script>
 
-
+<!-- Task -->
 <div id="add-task" uk-modal>
     <div class="uk-modal-dialog">
         <button class="uk-modal-close-default" type="button" uk-close></button>
+        <!-- Title -->
         <div class="uk-modal-header">
             <h2 class="uk-modal-title">Add a task</h2>
         </div>
+        <!-- /Title -->
+
+        <!-- Body -->
         <div class="uk-modal-body">
             <form id="form-add-task">
                 <div class="uk-margin">
@@ -103,9 +125,15 @@
                 </div>
             </form>
         </div>
+        <!-- /Body -->
+
+        <!-- Footer (Dialog Operations) -->
         <div class="uk-modal-footer uk-text-right">
             <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
             <button class="uk-button uk-button-primary" type="submit" form="form-add-task">Add</button>
         </div>
+        <!-- /Footer -->
+
     </div>
 </div>
+<!-- /Task -->

@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+
+<!--
+    Every page on the site will use this layout.
+-->
+
 <html>
     <head>
         {% if title %}
@@ -6,13 +11,19 @@
         {% else %}
             <title>Lore</title>
         {% endif %}
+
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/css/uikit.min.css">
+
+        <!-- CDN Dependencies -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/js/uikit.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/js/uikit-icons.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
         {{ moment.include_moment() }}
+        <!-- /CDN Dependencies -->
     </head>
+
+    <!-- Navbar styling + Push content down by 10px -->
     <style>
         #top-head {
             z-index: 9;
@@ -24,63 +35,81 @@
             margin-top: 80px;
         }
     </style>
-    <body>
 
-            {% if current_user.is_authenticated %}
-                <header id="top-head" class="uk-position-fixed">
-                    <div class="uk-container uk-container-expand uk-background-primary">
-                        <nav class="uk-navbar uk-light" data-uk-navbar="mode:click">
-                            <div class="uk-navbar-left">
-                                <ul class="uk-navbar-nav uk-visible@m">
-                                    <li><a uk-toggle="target: #offcanvas-usage" data-uk-icon="icon: menu"></a></li>
-                                    <li class="uk-active uk-margin-right"><a href={{ url_for('main.index') }}>Lore</a></li>
-                                    {% if title == "Home" %}
-                                    <li class="uk-active"><a href={{ url_for('main.index') }}>Home</a></li>
-                                    {% else %}
-                                    <li><a href={{ url_for('main.index') }}>Home</a></li>
-                                    {% endif %}
-                                    {% if title == "Explore" %}
-                                    <li class="uk-active"><a href={{ url_for('main.explore') }}>Explore</a></li>
-                                    {% else %}
-                                    <li><a href={{ url_for('main.explore') }}>Explore</a></li>
-                                    {% endif %}
-                                    {% if title == "Inbox" %}
-                                    <li class="uk-active"><a href={{ url_for('main.inbox') }}>Inbox</a></li>
-                                    {% else %}
-                                    <li><a href={{ url_for('main.inbox') }}>Inbox</a></li>
-                                    {% endif %}
-                                </ul>
-                            </div>
-                            <div class="uk-navbar-right">
-                                <ul class="uk-navbar-nav">
-                                    <li><a href="{{ url_for('main.user', username=current_user.username) }}" data-uk-icon="icon:user"> {{ current_user.username }}</a></li>
-                                    <li><a href={{ url_for('auth.logout') }} data-uk-icon="icon:sign-out"></a></li>
-                                </ul>
-                            </div>
-                        </nav>
-                    </div>
-                </header>
-            {% endif %}
-            {% include "main/offcanvas.html" %}
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <script>
+    <body>
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <script>
+                        $( document ).ready(function() {
                             UIkit.notification({message: "{{ message }}", status: "{{ category }}", timeout: 3000})
-                        </script>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-            <div class="uk-offcanvas-content">
-                {% block content %}{% endblock %}
-            </div>
-            <!-- FOOT -->
-            {% if current_user.anonymous %}
-            <div class="uk-position-bottom-center uk-position-small uk-dark" uk-sticky="top: ">
-                <span class="uk-text-small uk-text-center">Created by <a href="https://github.com/mushydev">@mushydev</a></span>
-            </div>
+                        });
+                    </script>
+                {% endfor %}
             {% endif %}
-            <!-- /FOOT -->
+        {% endwith %}
+        <!-- /Flash messages -->
+        
+        <!-- Authenticated Navbar -->
+        {% if current_user.is_authenticated %}
+            <header id="top-head" class="uk-position-fixed">
+                <div class="uk-container uk-container-expand uk-background-primary">
+                    <nav class="uk-navbar uk-light" data-uk-navbar="mode:click">
+                        <div class="uk-navbar-left">
+                            <ul class="uk-navbar-nav uk-visible@m">
+                                <li><a uk-toggle="target: #offcanvas-usage" data-uk-icon="icon: menu"></a></li>
+                                <li class="uk-active uk-margin-right"><a href={{ url_for('main.index') }}>Lore</a></li>
+                                {% if title == "Home" %}
+                                <li class="uk-active"><a href={{ url_for('main.index') }}>Home</a></li>
+                                {% else %}
+                                <li><a href={{ url_for('main.index') }}>Home</a></li>
+                                {% endif %}
+                                {% if title == "Explore" %}
+                                <li class="uk-active"><a href={{ url_for('main.explore') }}>Explore</a></li>
+                                {% else %}
+                                <li><a href={{ url_for('main.explore') }}>Explore</a></li>
+                                {% endif %}
+                                {% if title == "Inbox" %}
+                                <li class="uk-active"><a href={{ url_for('main.inbox') }}>Inbox</a></li>
+                                {% else %}
+                                <li><a href={{ url_for('main.inbox') }}>Inbox</a></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="uk-navbar-right">
+                            <ul class="uk-navbar-nav">
+                                <li><a href="{{ url_for('main.user', username=current_user.username) }}" data-uk-icon="icon:user">  {{ current_user.username }}</a></li>
+                                <li><a href={{ url_for('auth.logout') }} data-uk-icon="icon:sign-out"></a></li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </header>
+        {% endif %}
+        <!-- /Authenticated Navbar -->
+
+        <!-- Offcanvas Bar -->
+        {% include "main/_offcanvas.html" %}
+        <!-- /Offcanvas Bar -->
+
+        <!-- Main Content -->
+        <div class="uk-offcanvas-content">
+            <div class="uk-background-muted" uk-height-viewport="expand: true">
+                <div class="uk-container uk-background-default" uk-height-viewport="expand: true">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+        <!-- /Main Content -->
+
+        <!-- Footer -->
+        {% if current_user.anonymous %}
+        <div class="uk-position-bottom-center uk-position-small uk-dark" uk-sticky="top: ">
+            <span class="uk-text-small uk-text-center">Created by <a href="https://github.com/mushydev">@mushydev</a></span>
+        </div>
+        {% endif %}
+        <!-- /Footer -->
 
     </body>
 </html>

@@ -1,128 +1,91 @@
 {% extends "main/layout.html" %}
 
 {% block content %}
-<div class="uk-container uk-background-default" uk-height-viewport="expand: true">
-    <div class="uk-section uk-section-small uk-padding uk-padding-medium">
-        <div class="uk-container">
-            <div class="uk-grid uk-grid-large" data-uk-grid>
-                <div class="uk-width-auto">
-                    <img src="{{ user.get_image_path() }}">
-                </div>
-                <div class="uk-margin">
-                    <div>
-                        <h3 class="uk-margin-remove-bottom">{{ user.username }}  
-                        {% if user != current_user %}
-                            {% if current_user.is_following(user) %}
-                                <span class="uk-text-small uk-margin-remove"><a class="uk-text-baseline" href="{{ url_for('main.unfollow', username=user.username) }}">Unfollow</a></span>
-                            {% else %}
-                                <span class="uk-text-small uk-margin-remove"><a class="uk-text-baseline" href="{{ url_for('main.follow', username=user.username) }}">Follow</a></span>
-                            {% endif %}
-                        {% endif %}
-                        </h3>
-                        <p class="uk-margin-remove-top uk-margin-remove-bottom">{{ user.first_name }} {{ user.last_name }}</p>
-                        {% if user.about_me %}
-                            <p class="uk-margin-remove">{{ user.about_me }}</p>
-                        {% endif %}
-                    </div>
-                    <br>
-                    {% if user.last_seen %}<p class="uk-margin-remove">Last seen {{ moment(user.last_seen).fromNow() }}</p>{% endif %}
-                    <p class="uk-margin-remove">{{ user.followers.count() }} followers, {{ user.followed.count() }} following.</p>
-                    {% if user == current_user %}
-                    <ul class="uk-subnav" uk-margin>
-                        <li><a uk-toggle="target: #edit-info; animation: uk-animation-slide-top-small">Edit</a></li>
-                    </ul>
-                    <div id="edit-info" class="uk-margin" hidden>
-                        <fieldset class="uk-fieldset">
-                                <form method="POST" action="" enctype="multipart/form-data">
-                                    {{ form.hidden_tag() }}
-                                    <div class="uk-height-match" uk-grid>
-                                        <div>
-                                            <div class="uk-margin">
-                                                {{ form.username.label( **{'class': 'uk-form-label'} ) }}
-                                                {{ form.username( **{'class': 'uk-input', 'data-validation': 'length', 'data-validation-length': '3-16'} ) }}
-                                            </div>
-                                            <div class="uk-margin">
-                                                {{ form.email.label( **{'class': 'uk-form-label'} ) }}
-                                                {{ form.email( **{'class': 'uk-input', 'data-validation': 'email'} ) }}
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="uk-margin">
-                                                {{ form.about_me.label( **{'class': 'uk-form-label', 'rows': '5'} ) }}
-                                                {{ form.about_me( **{'class': 'uk-input', 'data-validation': 'length', 'data-validation-length': '2-120'} ) }}
-                                            </div>
-                                            <div class="uk-margin">
-                                                {{ form.picture.label( **{'class': 'uk-form-label'} ) }}
-                                                <div class="js-upload" uk-form-custom>
-                                                    {{ form.picture(
-                                                        **{
-                                                            'data-validation': 'mime size',
-                                                            'data-validation-allowing': 'jpg, png, gif',
-                                                            'data-validation-max-size': '2M'
-                                                        }
-                                                    ) }}
-                                                    <button class="uk-button uk-button-default" type="button">Select</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="uk-margin">
-                                        {{ form.submit( **{'class': 'uk-button uk-button-primary'} ) }}
-                                    </div>
-                                    <script>
-                                        $.validate({    
-                                            lang: 'en',
-                                            errorElementClass: 'uk-form-danger',
-                                            errorMessageClass: 'uk-text-danger'
-                                        });
-                                    </script>
-                                </form>
-                        </fieldset>
-                    </div>
-                    {% endif %}
-                    {% if user != current_user %}
-                        <br>
-                        <button class="uk-button uk-button-medium" uk-toggle="target: #send-message">Send a message</button>
-                        {% include "main/_message_dialog.html" %}
-                    {% endif %}
-                </div>
+
+<!-- User Information -->
+<div class="uk-section uk-section-small uk-padding uk-padding-medium">
+    <div class="uk-container">
+        <div class="uk-grid uk-grid-large" data-uk-grid>
+            <div class="uk-width-auto">
+                <img src="{{ user.get_image_path() }}">
             </div>
+
+            <div class="uk-margin">
+                <div>
+                    <h3 class="uk-margin-remove-bottom">{{ user.username }}  
+                    {% if user != current_user %}
+                        {% if current_user.is_following(user) %}
+                            <span class="uk-text-small uk-margin-remove"><a class="uk-text-baseline" href="{{ url_for('main.unfollow', username=user.username) }}">Unfollow</a></span>
+                        {% else %}
+                            <span class="uk-text-small uk-margin-remove"><a class="uk-text-baseline" href="{{ url_for('main.follow', username=user.username) }}">Follow</a></span>
+                        {% endif %}
+                    {% endif %}
+                    </h3>
+                    <p class="uk-margin-remove-top uk-margin-remove-bottom">{{ user.first_name }} {{ user.last_name }}</p>
+                    {% if user.about_me %}
+                        <p class="uk-margin-remove">{{ user.about_me }}</p>
+                    {% endif %}
+                </div>
+
+                <br>
+                {% if user.last_seen %}<p class="uk-margin-remove">Last seen {{ moment(user.last_seen).fromNow() }}</p>{% endif %}
+                <p class="uk-margin-remove">{{ user.followers.count() }} followers, {{ user.followed.count() }} following.</p>
+                
+                {% if user == current_user %}
+                <ul class="uk-subnav" uk-margin>
+                    <li><a uk-toggle="target: #edit-info; animation: uk-animation-slide-top-small">Edit</a></li>
+                </ul>
+                {% include "main/_edit.html" %}
+                {% endif %}
+
+                {% if user != current_user %}
+                    <br>
+                    <button class="uk-button uk-button-medium" uk-toggle="target: #send-message">Send a message</button>
+                    {% include "main/_message_dialog.html" %}
+                {% endif %}
+            </div>
+
         </div>
     </div>
+</div>
+<!-- /User Information -->
+
+<!-- Posts -->
+<div class="uk-section uk-section-small uk-padding-remove" uk-height-viewport="expand: true">
     {% if user == current_user %}
         <p class="uk-text-lead">Your Posts</p>
         {% if posts %}
-        <hr></hr>
+            <hr>
         {% else %}
-        <hr></hr>
-        <h3 class="uk-text-center">You're quiet</h3>
-        <p class="uk-text-center uk-text-muted uk-padding-remove uk-text-medium">You can post <a href={{ url_for('main.index') }}>here</a></p>
+            <hr>
+            <h3 class="uk-text-center">You're quiet</h3>
+            <p class="uk-text-center uk-text-muted uk-padding-remove uk-text-medium">You can post <a href={{ url_for('main.index') }}>here</a></p>
         {% endif %}
     {% else %}
         <p class="uk-text-lead">{{ user.username }}'s Posts</p>
         {% if posts %}
-        <hr></hr>
+            <hr>
         {% else %}
-        <hr></hr>
-        <h3 class="uk-text-center">Looks like {{ user.username }} hasn't posted.</h3>
-        <p class="uk-text-center uk-text-muted uk-padding-remove uk-text-medium">I'm sure they'll post soon!</a></p>
+            <hr>
+            <h3 class="uk-text-center">Looks like {{ user.username }} hasn't posted.</h3>
+            <p class="uk-text-center uk-text-muted uk-padding-remove uk-text-medium">I'm sure they'll post soon!</a></p>
         {% endif %}
     {% endif %}
-    
-    <div class="uk-section uk-section-small uk-padding-remove">
-        <div class="uk-container">
-            {% if posts %}
-                {% for post in posts %}
-                {% include "main/_post.html" %}
-                {% endfor %}
-                {% if next_url %}
-                    <a href="{{ next_url }}"><<</a>
-                {% endif %}
-                {% if prev_url %}
-                    <a href="{{ prev_url }}">>></a>
-                {% endif %}
+
+    <div class="uk-container">
+        {% if posts %}
+            {% for post in posts %}
+            {% include "main/_post.html" %}
+            {% endfor %}
+            {% if next_url %}
+                <a href="{{ next_url }}"><<</a>
             {% endif %}
-        </div>
+            {% if prev_url %}
+                <a href="{{ prev_url }}">>></a>
+            {% endif %}
+        {% endif %}
     </div>
 </div>
+<!-- /Posts -->
+
 {% endblock %}

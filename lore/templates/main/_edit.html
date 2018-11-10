@@ -1,0 +1,52 @@
+<!-- 
+    This is the edit section, that is triggered by the pressing of the "Edit Account", button.
+    Utilises the @jquery-form-validator plugin for realtime validation.
+-->
+<div id="edit-info" class="uk-margin" hidden>
+    <fieldset class="uk-fieldset">
+            <form method="POST" action="" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <div class="uk-height-match" uk-grid>
+                    <div>
+                        <div class="uk-margin">
+                            {{ form.username.label( **{'class': 'uk-form-label'} ) }}
+                            {{ form.username( **{'class': 'uk-input', 'data-validation': 'length', 'data-validation-length': '3-16'} ) }}
+                        </div>
+                        <div class="uk-margin">
+                            {{ form.email.label( **{'class': 'uk-form-label'} ) }}
+                            {{ form.email( **{'class': 'uk-input', 'data-validation': 'email'} ) }}
+                        </div>
+                    </div>
+                    <div>
+                        <div class="uk-margin">
+                            {{ form.about_me.label( **{'class': 'uk-form-label', 'rows': '5'} ) }}
+                            {{ form.about_me( **{'class': 'uk-input', 'data-validation': 'length', 'data-validation-length': '2-120'} ) }}
+                        </div>
+                        <div class="uk-margin">
+                            {{ form.picture.label( **{'class': 'uk-form-label'} ) }}
+                            <div class="js-upload" uk-form-custom>
+                                {{ form.picture(
+                                    **{
+                                        'data-validation': 'mime size',
+                                        'data-validation-allowing': 'jpg, png, gif',
+                                        'data-validation-max-size': '2M'
+                                    }
+                                ) }}
+                                <button class="uk-button uk-button-default" type="button">Select</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="uk-margin">
+                    {{ form.submit( **{'class': 'uk-button uk-button-primary'} ) }}
+                </div>
+                <script>
+                    $.validate({    
+                        lang: 'en',
+                        errorElementClass: 'uk-form-danger',
+                        errorMessageClass: 'uk-text-danger'
+                    });
+                </script>
+            </form>
+    </fieldset>
+</div>

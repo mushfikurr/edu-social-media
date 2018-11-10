@@ -1,24 +1,36 @@
+<!--
+	This is the entrance/unauthenticated page.
+	Since it doesn't share a lot of the features of a normal page of authenticated page, it doesn't extend "layout".
+-->
 
 <!DOCTYPE html>
 <html lang="en">
+
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+
 		{% if title %}
             <title>Lore | {{ title }}</title>
         {% else %}
             <title>Lore</title>
-        {% endif %}
+		{% endif %}
+
 		<link rel="icon" href="img/favicon.ico">
-		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/css/uikit.min.css">
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/landing.css') }}">
+
+		<!-- CDN Dependencies -->
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/css/uikit.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/js/uikit.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/js/uikit-icons.min.js"></script>
+		<!-- /CDN Dependencies -->
     </head>
     
 	<body class="uk-light wrap uk-background-norepeat uk-background-cover uk-background-center uk-background-secondary" style="background-image: url( {{ url_for('static', filename='img/adult-cafe-null.jpg') }} )">
 		<div class="uk-offcanvas-content">
 			<div class="uk-flex uk-flex-center uk-flex-middle uk-height-viewport uk-position-z-index uk-position-relative tinted-image" data-uk-height-viewport="min-height: 400">
 				
-				<!-- NAV -->
+				<!-- Navbar -->
 				<div class="uk-position-top">
 					<div class="uk-container uk-container-small">
 						<nav class="uk-navbar-container uk-navbar-transparent" data-uk-navbar>
@@ -36,9 +48,9 @@
 						</nav>
 					</div>
 				</div>
-				<!-- /NAV -->
+				<!-- /Navbar -->
 
-				<!-- TEXT -->
+				<!-- Splash -->
 				<div class="uk-container uk-container-small uk-flex-auto uk-text-center" data-uk-scrollspy="target: > .animate; cls: uk-animation-slide-bottom-small uk-invisible; delay: 300">
 					<h2 class="uk-heading-primary animate uk-invisible" style="font-weight: 600;">Wise up.</h2>
 					<div class="uk-width-4-5@m uk-margin-auto animate uk-invisible">
@@ -48,18 +60,16 @@
 						<a class="uk-button uk-button-default uk-button-large uk-width-auto@s" title="Learn More" href="{{ url_for('auth.register') }}">JOIN</a>
 					</div>
 				</div>
-				<!-- /TEXT -->
+				<!-- /Splash -->
 
-				<!-- FOOT -->
+				<!-- Footer -->
 				<div class="uk-position-bottom-center uk-position-small">
 					<span class="uk-text-small uk-text-center">Created by <a href="https://github.com/mushydev">@mushydev</a></span>
 				</div>
-				<!-- /FOOT -->
+				<!-- /Footer -->
 
 			</div>
 		</div>
-		<!-- JS FILES -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/js/uikit.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/js/uikit-icons.min.js"></script>
 	</body>
-	</html>
+
+</html>

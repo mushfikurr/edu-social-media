@@ -1,45 +1,61 @@
+<!-- 
+    This is the first page a user sees when logging in.
+    Right now, it is hard to label this page.
+    For now I am calling it a "Timeline" page, where users can post, and view followers posts.
+-->
+
 {% extends "main/layout.html" %}
+
 {% block content %}
-    <div class="uk-container uk-background-default" uk-height-viewport="expand: true">
-        <div class="uk-section uk-section-small uk-padding uk-padding-medium">
-            <div class="uk-container">
-                <form action="" method="post">
-                    {% if form %}
-                    {{ form.hidden_tag() }}
-                        <div class="uk-margin">
-                            {{ form.body(**{'class': 'uk-textarea uk-width uk-width-1-1', 'rows': '3', 'placeholder': 'Say something..'}) }}<br>
-                        </div>
-                        <div class="uk-margin">
-                            {{ form.submit(**{'class': 'uk-button uk-button-primary uk-button-medium uk-margin'}) }}
-                        </div>
-                    {% endif %}
-                </form>
-            </div>
-            <div class="uk-container">
-                {% if posts %}
-                <h3>See what the people you follow are talking about.</h3>
-                {% if current_user.followed.count() == 0 %}
-                    <p class="uk-text-small uk-text-muted">Psst. You can find people <a href={{ url_for('main.explore') }}>here</a>!</p>
-                {% endif %}
-                <hr>
-                {% else %}
-                <h3 class="uk-text-center uk-">Woah, your timeline is empty!</h3>
-                <p class=" uk-text-center uk-text-medium uk-text-muted">Let's make some <a href={{ url_for('main.explore') }}>friends</a></p>
-                {% endif %}
-                {% for post in posts %}
-                    {% include "main/_post.html" %}
-                {% endfor %}
-                {% if next_url or prev_url %}
-                <ul class="uk-pagination">
-                    {% if next_url %}
-                        <li class="uk-margin-auto-left"><a href="{{ next_url }}">Next <span class="uk-margin-small-left" uk-pagination-next></span></a></li>
-                    {% endif %}
-                    {% if prev_url %}
-                        <li><a href="{{ prev_url }}"><span class="uk-margin-small-right" uk-pagination-previous></span> Previous</a></li>
-                    {% endif %}
-                </ul>
-                {% endif %}
-            </div> 
-        </div>
+<div class="uk-section uk-section-small uk-padding uk-padding-medium">
+    <!-- PostForm -->
+    <div class="uk-container">
+        <form action="" method="post">
+            {% if form %}
+            {{ form.hidden_tag() }}
+                <div class="uk-margin">
+                    {{ form.body(**{'class': 'uk-textarea uk-width uk-width-1-1', 'rows': '3', 'placeholder': 'Say something..'}) }}<br>
+                </div>
+                <div class="uk-margin">
+                    {{ form.submit(**{'class': 'uk-button uk-button-primary uk-button-medium uk-margin'}) }}
+                </div>
+            {% endif %}
+        </form>
     </div>
+    <!-- /PostForm -->
+
+    <div class="uk-container">
+        <!-- Logic for empty timelines -->
+        {% if posts %}
+        <h3>See what the people you follow are talking about.</h3>
+        {% if current_user.followed.count() == 0 %}
+            <p class="uk-text-small uk-text-muted">Psst. You can find people <a href={{ url_for('main.explore') }}>here</a>!</p>
+        {% endif %}
+        <hr>
+        {% else %}
+        <h3 class="uk-text-center uk-">Woah, your timeline is empty!</h3>
+        <p class=" uk-text-center uk-text-medium uk-text-muted">Let's make some <a href={{ url_for('main.explore') }}>friends</a></p>
+        {% endif %}
+        <!-- /Logic -->
+
+        <!-- Posts -->
+        {% for post in posts %}
+            {% include "main/_post.html" %}
+        {% endfor %}
+        <!-- /Posts -->
+
+        <!-- Pagination -->
+        {% if next_url or prev_url %}
+        <ul class="uk-pagination">
+            {% if next_url %}
+                <li class="uk-margin-auto-left"><a href="{{ next_url }}">Next <span class="uk-margin-small-left" uk-pagination-next></span></a></li>
+            {% endif %}
+            {% if prev_url %}
+                <li><a href="{{ prev_url }}"><span class="uk-margin-small-right" uk-pagination-previous></span> Previous</a></li>
+            {% endif %}
+        </ul>
+        {% endif %}
+        <!-- /Pagination -->
+    </div> 
+</div>
 {% endblock content %}
