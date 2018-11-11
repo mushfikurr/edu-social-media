@@ -20,6 +20,7 @@ def resize_and_save(input_picture, new_res):
             current_app.root_path, 'static/profile-pictures', picture_fn)
 
     i = Image.open(input_picture)
+    # Checks whether the picture is already the specified size.
     if i.size[0] == 200 and i.size[1] == 200:
         return picture_fn
     if i.size[0] == 80 and i.size[1] == 80:
@@ -27,15 +28,18 @@ def resize_and_save(input_picture, new_res):
     scaled_res = (new_res[0]*2, new_res[1]*2)
     i.thumbnail(scaled_res)
     w, h = i.size[0], i.size[1]
-    print(w, h)
     i = i.crop((w//2 - new_res[0]//2, h//2 - new_res[1]//2, w//2 + new_res[0]//2, h//2 + new_res[1]//2))
-    print(i.size)
-    i.save(picture_path)
+    i.save(picture_path, optimize=True, quality=85)
 
     return picture_fn
 
 
 def clean_avatar(user):
+    """
+    This function deals with the cleaning of avatar files.
+    When a user changes their profile picture, their old profile picture should not be stored.
+    This saves space on the system.
+    """
     if user.image_file != "default.png":
         image_path = path.join(
             current_app.root_path,

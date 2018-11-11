@@ -29,6 +29,9 @@ class RegisterForm(FlaskForm):
         'Surname',
         validators=name_validator
     )
+    is_teacher = BooleanField(
+        'Are you a teacher?'
+    )
     password = PasswordField(
         'Password',
         validators=[DataRequired()]
