@@ -2,6 +2,7 @@ from lore import db, login, bcrypt
 from datetime import datetime
 from flask import url_for, current_app
 from flask_login import UserMixin
+from whoosh.analysis import StemmingAnalyzer
 
 
 @login.user_loader
@@ -24,15 +25,18 @@ class User(db.Model, UserMixin):
     User model for DB
     Inherits from Flask Login's UserMixin
     """
-    id = db.Column(db.Integer, primary_key=True)  # Unique identifier
+    __searchable__ = ['username', 'first_name', 'last_name']  # Indexed
+
+    id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(16), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False,
                            default='default.png')
     small_image_file = db.Column(db.String(20), nullable=False,
-                           default='default_8080.png')
+                                 default='default_8080.png')
     first_name = db.Column(db.String(20), nullable=False)
     last_name = db.Column(db.String(20), nullable=False)
+    teacher = db.Column(db.Boolean, default=False)
     password = db.Column(db.String(60))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     about_me = db.Column(db.String(120))
@@ -105,6 +109,15 @@ class User(db.Model, UserMixin):
         return self.followed.filter(
             followers.c.followed_id == user.id).count() > 0
 
+    def is_teacher(self):
+        """
+        Returns whether the user is a teacher or not.
+        """
+        if self.teacher:
+            return True
+        else:
+            return False
+
     def followed_posts(self):
         """
         Returns followed users and own posts in a timeline fashion
@@ -139,6 +152,9 @@ class User(db.Model, UserMixin):
 
 
 class Message(db.Model):
+    __searchable__ = ['body']
+    __analyzer__ = StemmingAnalyzer()
+
     id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -153,8 +169,12 @@ class Post(db.Model):
     """
     Model for a post that a user can have
     """
+    __searchable__ = ['body']
+    __analyzer__ = StemmingAnalyzer()
+
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(400), nullable=False)
+    picture = db.Column(db.String(20))
     publish_date = db.Column(
         db.DateTime,
         nullable=False,
@@ -163,6 +183,10 @@ class Post(db.Model):
 
     # Foreign key to refer to User
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def get_image_path(self):
+        return url_for(
+            'static', filename='img/posted/' + self.picture)
 
     def __repr__(self):
         return f'Post({self.body}, {self.publish_date})'

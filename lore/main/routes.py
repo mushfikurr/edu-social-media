@@ -2,9 +2,10 @@ from flask import (render_template, redirect, url_for, flash, request,
                    current_app)
 from flask_login import current_user, login_required
 from lore import db
+from lore.main.image import resize_and_save_post
 from lore.main.avatar import resize_and_save
 from lore.main import bp
-from lore.main.forms import PostForm, UpdateAccountForm
+from lore.main.forms import PostForm, PostPictureForm, UpdateAccountForm
 from lore.main.models import User, Post, Message
 from lore.main.avatar import clean_avatar
 from datetime import datetime
@@ -36,8 +37,14 @@ def index():
         )
 
         form = PostForm()
+        pictureform = PostPictureForm()
         if form.validate_on_submit():
-            new_post = Post(body=form.body.data, author=current_user)
+            if form.picture:
+                print(form.picture.errors)
+                picture_post = resize_and_save_post(form.picture.data)
+                new_post = Post(body=form.body.data, author=current_user, picture=picture_post)
+            else:
+                new_post = Post(body=form.body.data, author=current_user)
             db.session.add(new_post)
             db.session.commit()
             return redirect(url_for('main.index'))
@@ -53,7 +60,8 @@ def index():
             posts=posts.items,
             next_url=next_url,
             prev_url=prev_url,
-            form=form
+            form=form,
+            pictureform=pictureform
         )
     else:
         return render_template('main/landing.html')
@@ -137,21 +145,14 @@ def user(username):
 
     # Update Account Form
     form = UpdateAccountForm()
-    print(form.data)
     if form.validate_on_submit():
         if form.picture.data:
-            print("Cleaning avatar..")
             clean_avatar(current_user)
-            print(current_user.image_file)
-            print(current_user.small_image_file)
             picture_file = resize_and_save(form.picture.data, (200, 200))
             small_picture_file = resize_and_save(form.picture.data, (80, 80))
 
-            print("Setting image files..")
             current_user.image_file = picture_file
-            print(current_user.image_file)
             current_user.small_image_file = small_picture_file
-            print(current_user.small_image_file)
 
         current_user.email = form.email.data
         current_user.username = form.username.data
@@ -209,4 +210,12 @@ def inbox():
         next_url=next_url,
         prev_url=prev_url,
         title="Inbox"
+    )
+
+
+@bp.route('/search', methods=['GET', 'POST'])
+@login_required
+def search():
+    return render_template(
+        'main/search.html'
     )

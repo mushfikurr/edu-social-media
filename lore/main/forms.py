@@ -71,6 +71,28 @@ class PostForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
+class PostPictureForm(FlaskForm):
+    """
+    Form used for submitting a post with a picture.
+    """
+    caption = TextAreaField(
+        'Caption your picture!',
+        validators=[DataRequired(), Length(min=1, max=140)]
+    )
+    picture = FileField(
+        'Attach a picture',
+        validators=[FileAllowed(['jpg', 'png'])]
+    )
+    submit = SubmitField('Submit')
+
+
+class TeacherPostForm(FlaskForm):
+    """
+    Form used for teacher resource uploading.
+    """
+    pass
+
+
 class MessageForm(FlaskForm):
     """
     Form used to send a private message to a user.

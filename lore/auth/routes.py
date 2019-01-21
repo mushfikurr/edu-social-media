@@ -48,16 +48,28 @@ def register():
     """
     register_form = RegisterForm()
     if register_form.validate_on_submit():
-        new_user = User(
-            username=register_form.username.data,
-            email=register_form.email.data,
-            first_name=register_form.first_name.data,
-            last_name=register_form.last_name.data
-        )
+        if register_form.is_teacher:
+            new_user = User(
+                username=register_form.username.data,
+                email=register_form.email.data,
+                first_name=register_form.first_name.data,
+                last_name=register_form.last_name.data,
+                teacher=True
+            )
+        else:
+            new_user = User(
+                username=register_form.username.data,
+                email=register_form.email.data,
+                first_name=register_form.first_name.data,
+                last_name=register_form.last_name.data
+            )
         new_user.set_password(register_form.password.data)
+
         db.session.add(new_user)
         db.session.commit()
-        flash('Account created successfully!', 'info')
+
+        flash('Account registered successfully!', 'info')
+
         return redirect(url_for('auth.login'))
     return render_template(
         'auth/register.html',
