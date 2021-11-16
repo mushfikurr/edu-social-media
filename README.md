@@ -1,4 +1,4 @@
-# Lore
+# Educational Social Media
 
-An education-oriented social media, created for the CS A-Level.
+A proof of concept education-oriented social media, created for the CS A-Level.
 Developed primarily in Python, using Flask. 
