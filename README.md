@@ -1,4 +1,4 @@
 # Educational Social Media
 
 A proof of concept education-oriented social media.
-Developed primarily in Python, using Flask. 
+Developed using Python (Flask) and HTML/CSS/JavaScript (jQuery). Uses SQLAlchemy for migratable databases.
